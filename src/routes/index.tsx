@@ -261,23 +261,23 @@ function HomePage() {
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
-      <section className="mx-auto max-w-6xl px-6 py-32">
-        <SectionHeader eyebrow="Recommendations" title="What collaborators say." align="center" />
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {testimonials.map((t, i) => (
-            <Reveal key={t.author} delay={i * 0.08}>
-              <figure className="flex h-full flex-col rounded-3xl border border-border bg-card p-8 shadow-glass">
-                <blockquote className="text-base leading-relaxed text-foreground/90">"{t.quote}"</blockquote>
-                <figcaption className="mt-6 border-t border-border pt-6">
-                  <p className="text-sm font-medium text-foreground">{t.author}</p>
-                  <p className="text-sm text-muted-foreground">{t.role}</p>
-                </figcaption>
-              </figure>
-            </Reveal>
-          ))}
-        </div>
-      </section>
+      {/*/!* TESTIMONIALS *!/*/}
+      {/*<section className="mx-auto max-w-6xl px-6 py-32">*/}
+      {/*  <SectionHeader eyebrow="Recommendations" title="What collaborators say." align="center" />*/}
+      {/*  <div className="mt-14 grid gap-6 md:grid-cols-3">*/}
+      {/*    {testimonials.map((t, i) => (*/}
+      {/*      <Reveal key={t.author} delay={i * 0.08}>*/}
+      {/*        <figure className="flex h-full flex-col rounded-3xl border border-border bg-card p-8 shadow-glass">*/}
+      {/*          <blockquote className="text-base leading-relaxed text-foreground/90">"{t.quote}"</blockquote>*/}
+      {/*          <figcaption className="mt-6 border-t border-border pt-6">*/}
+      {/*            <p className="text-sm font-medium text-foreground">{t.author}</p>*/}
+      {/*            <p className="text-sm text-muted-foreground">{t.role}</p>*/}
+      {/*          </figcaption>*/}
+      {/*        </figure>*/}
+      {/*      </Reveal>*/}
+      {/*    ))}*/}
+      {/*  </div>*/}
+      {/*</section>*/}
 
       {/* CTA */}
       <section className="mx-auto max-w-6xl px-6 pb-32">
