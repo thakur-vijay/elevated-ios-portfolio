@@ -1,4 +1,11 @@
-import { Outlet, Link, createRootRoute, HeadContent, Scripts, useRouterState } from "@tanstack/react-router";
+import {
+  Outlet,
+  Link,
+  createRootRoute,
+  HeadContent,
+  Scripts,
+  useRouterState,
+} from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect } from "react";
 
