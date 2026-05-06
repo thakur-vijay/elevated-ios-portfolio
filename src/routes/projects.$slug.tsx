@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import { Download, Star, ArrowLeft, ChevronLeft, ChevronRight, X, Play } from "lucide-react";
-import { getProject, projects } from "@/lib/projects";
+import { getProject, projects, type Project } from "@/lib/projects";
 import { Reveal } from "@/components/site/Reveal";
 import { cn } from "@/lib/utils";
 
@@ -37,7 +37,7 @@ export const Route = createFileRoute("/projects/$slug")({
 });
 
 function ProjectDetailPage() {
-  const { project } = Route.useLoaderData();
+  const { project } = Route.useLoaderData() as { project: Project };
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 120]);
