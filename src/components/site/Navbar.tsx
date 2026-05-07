@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Apple } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAbout } from "@/context/AboutContext";
 
 const links = [
   { to: "/", label: "Home" },
@@ -16,6 +17,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { location } = useRouterState();
+  const about = useAbout();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -36,7 +38,7 @@ export function Navbar() {
       <nav className="mx-auto flex h-12 max-w-6xl items-center justify-between px-6 text-[13px]">
         <Link to="/" className="flex items-center gap-2 font-medium tracking-tight">
           <Apple className="h-4 w-4" strokeWidth={2.4} />
-          <span>Adrian Vale</span>
+          <span>{about?.name}</span>
         </Link>
 
         <ul className="hidden items-center gap-8 md:flex">

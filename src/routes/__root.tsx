@@ -13,8 +13,12 @@ import appCss from "../styles.css?url";
 import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
 import { ThemeToggle } from "@/components/site/ThemeToggle";
-import { Provider } from "react-redux";
-import { store } from "@/redux/store";
+import { Provider, useDispatch } from "react-redux";
+import { store, AppDispatch, RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
+import { fetchAboutResponse } from "@/redux/features/aboutSlice.ts";
+import { fetchFooterResponse } from "@/redux/features/footerSlice.ts";
+import { AboutContext } from "@/context/AboutContext.tsx";
 
 function NotFoundComponent() {
   return (
@@ -82,12 +86,28 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  const { location } = useRouterState();
-  useEffect(() => {
-    window.scrollTo(0, 0);}, [location.pathname]);
-
   return (
     <Provider store={store}>
+      <RootContent />
+    </Provider>
+  );
+}
+
+function RootContent(){
+  const { location } = useRouterState();
+  const dispatch = useDispatch<AppDispatch>();
+  const { about, status } = useSelector((state: RootState) => state.about);
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchAboutResponse());
+    }
+  }, [status, dispatch]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+  return (
+    <AboutContext.Provider value={about}>
       <Navbar />
       <main className="min-h-screen pt-12">
         <AnimatePresence mode="wait">
@@ -104,6 +124,6 @@ function RootComponent() {
       </main>
       <Footer />
       <ThemeToggle />
-    </Provider>
+    </AboutContext.Provider>
   );
 }
