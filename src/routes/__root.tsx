@@ -13,6 +13,8 @@ import appCss from "../styles.css?url";
 import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
 import { ThemeToggle } from "@/components/site/ThemeToggle";
+import { Provider } from "react-redux";
+import { store } from "@/redux/store";
 
 function NotFoundComponent() {
   return (
@@ -81,10 +83,11 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { location } = useRouterState();
-  useEffect(() => { window.scrollTo(0, 0); }, [location.pathname]);
+  useEffect(() => {
+    window.scrollTo(0, 0);}, [location.pathname]);
 
   return (
-    <>
+    <Provider store={store}>
       <Navbar />
       <main className="min-h-screen pt-12">
         <AnimatePresence mode="wait">
@@ -101,6 +104,6 @@ function RootComponent() {
       </main>
       <Footer />
       <ThemeToggle />
-    </>
+    </Provider>
   );
 }

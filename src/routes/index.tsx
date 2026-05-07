@@ -1,12 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { ArrowRight, ChevronDown, Sparkles, Zap, Layers, Cpu } from "lucide-react";
 import heroPhone from "@/assets/hero-iphone.png";
 import { projects } from "@/lib/projects";
 import { AppCard } from "@/components/site/AppCard";
 import { SectionHeader } from "@/components/site/SectionHeader";
 import { Reveal } from "@/components/site/Reveal";
+import { useDispatch } from "react-redux";
+import { RootState } from "../redux/store";
+import { fetchHomeResponse } from "../redux/features/homeSlice";
+import { useSelector } from "react-redux";
+import { AppDispatch } from "../redux/store";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -76,6 +81,14 @@ function HomePage() {
   const headlineY = useTransform(scrollYProgress, [0, 1], [0, -80]);
   const headlineOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
+  const dispatch = useDispatch<AppDispatch>();
+  const { home, status } = useSelector((state: RootState) => state.home);
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchHomeResponse());
+    }
+  }, [status, dispatch]);
   return (
     <>
       {/* HERO */}
@@ -93,7 +106,7 @@ function HomePage() {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="text-eyebrow text-accent"
           >
-            Senior iOS Engineer · San Francisco
+            Senior iOS Engineer · {home?.homeSection?.professionLocation}
           </motion.p>
 
           <motion.h1
