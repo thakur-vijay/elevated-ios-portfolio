@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchHomeData } from "../../sanity/sanityService";
+import { HomeResponse } from "@/models/home.ts";
 
 interface HomeState {
-  home: any;
+  home: HomeResponse | null;
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
@@ -13,11 +14,12 @@ const initialState: HomeState = {
   error: null,
 };
 
-export const fetchHomeResponse = createAsyncThunk("home/fetchHome", async () => {
-  const response = await fetchHomeData();
-  console.log("response from homeSlice", response);
-  return response ? response[0] : null;
-});
+export const fetchHomeResponse = createAsyncThunk<HomeResponse | null>(
+  "home/fetchHome",
+  async () => {
+    return await fetchHomeData();
+  },
+);
 
 const homeSlice = createSlice({
   name: "home",

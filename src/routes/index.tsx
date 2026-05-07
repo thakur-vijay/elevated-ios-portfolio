@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef } from "react";
-import { ArrowRight, ChevronDown, Sparkles, Zap, Layers, Cpu } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import heroPhone from "@/assets/hero-iphone.png";
 import { projects } from "@/lib/projects";
 import { AppCard } from "@/components/site/AppCard";
@@ -16,54 +16,21 @@ import { AppDispatch } from "../redux/store";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Adrian Vale — Senior iOS Engineer" },
-      { name: "description", content: "Premium native iOS engineering. Swift, SwiftUI, and uncompromising product craft for the Apple ecosystem." },
+      { title: "{Adrian Vale} — Senior iOS Engineer" },
+      {
+        name: "description",
+        content:
+          "Premium native iOS engineering. Swift, SwiftUI, and uncompromising product craft for the Apple ecosystem.",
+      },
       { property: "og:title", content: "Adrian Vale — Senior iOS Engineer" },
-      { property: "og:description", content: "Premium native iOS engineering for the Apple ecosystem." },
+      {
+        property: "og:description",
+        content: "Premium native iOS engineering for the Apple ecosystem.",
+      },
     ],
   }),
   component: HomePage,
 });
-
-const stack = [
-  { name: "Swift", icon: Zap },
-  { name: "SwiftUI", icon: Sparkles },
-  { name: "UIKit", icon: Layers },
-  { name: "Combine", icon: Cpu },
-  { name: "Async/Await", icon: Zap },
-  { name: "Core Data", icon: Layers },
-  { name: "CloudKit", icon: Sparkles },
-  { name: "Metal", icon: Cpu },
-  { name: "AVFoundation", icon: Zap },
-  { name: "WidgetKit", icon: Layers },
-  { name: "App Intents", icon: Sparkles },
-  { name: "TCA", icon: Cpu },
-];
-
-const metrics = [
-  { value: "10+", label: "Years shipping iOS" },
-  { value: "24", label: "Apps on the App Store" },
-  { value: "8M+", label: "Cumulative downloads" },
-  { value: "4.8★", label: "Average rating" },
-];
-
-const testimonials = [
-  {
-    quote: "Adrian raises the bar for what 'native' should feel like. Every interaction is considered.",
-    author: "Sara Lin",
-    role: "Head of Product, Northwind",
-  },
-  {
-    quote: "The closest I've worked with someone who genuinely thinks like an Apple HIG architect.",
-    author: "Marcus Reid",
-    role: "Engineering Director, Helio",
-  },
-  {
-    quote: "He shipped a flagship app with the polish of a 50-person team — alone.",
-    author: "Yuki Tanaka",
-    role: "Founder, Rivet Studio",
-  },
-];
 
 const experience = [
   { year: "2024 — Now", role: "Principal iOS Engineer", company: "Yatts" },
@@ -92,7 +59,10 @@ function HomePage() {
   return (
     <>
       {/* HERO */}
-      <section ref={heroRef} className="relative -mt-12 flex min-h-screen flex-col items-center justify-center overflow-hidden pt-12">
+      <section
+        ref={heroRef}
+        className="relative -mt-12 flex min-h-screen flex-col items-center justify-center overflow-hidden pt-12"
+      >
         <div className="absolute inset-0 -z-10 grad-hero" />
         <div className="absolute inset-0 -z-10 noise-overlay" />
 
@@ -106,7 +76,7 @@ function HomePage() {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="text-eyebrow text-accent"
           >
-            Senior iOS Engineer · {home?.homeSection?.professionLocation}
+            {home?.homeSection?.professionTitle} · {home?.homeSection?.professionLocation}
           </motion.p>
 
           <motion.h1
@@ -115,10 +85,10 @@ function HomePage() {
             transition={{ duration: 1.1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="mt-6 text-display-2xl text-foreground"
           >
-            Building premium
+            {home?.homeSection?.title1}
             <br />
             <span className="bg-gradient-to-r from-accent via-foreground to-accent bg-clip-text text-transparent">
-              iOS experiences.
+              {home?.homeSection?.title2}
             </span>
           </motion.h1>
 
@@ -128,7 +98,7 @@ function HomePage() {
             transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="mx-auto mt-7 max-w-2xl text-lg text-muted-foreground sm:text-xl"
           >
-            A decade of native engineering, obsessed with the details that make great Apple apps feel inevitable.
+            {home?.homeSection?.subtitle}
           </motion.p>
 
           <motion.div
@@ -182,17 +152,16 @@ function HomePage() {
       {/* INTRO */}
       <section className="mx-auto max-w-4xl px-6 py-32 text-center sm:py-40">
         <Reveal>
-          <p className="text-eyebrow text-accent">Engineer · Designer · Shipper</p>
+          <p className="text-eyebrow text-accent">
+            {home?.philosophySection?.roleTags?.join(" · ")}
+          </p>
         </Reveal>
         <Reveal delay={0.05}>
-          <h2 className="mt-4 text-display-xl text-foreground">
-            I build apps people quietly fall in love with.
-          </h2>
+          <h2 className="mt-4 text-display-xl text-foreground">{home?.philosophySection?.title}</h2>
         </Reveal>
         <Reveal delay={0.1}>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-            I lead native iOS engineering for ambitious products — from architecture and animation to launch
-            and the long tail of polish that separates good from extraordinary.
+            {home?.philosophySection?.subtitle}
           </p>
         </Reveal>
       </section>
@@ -214,17 +183,21 @@ function HomePage() {
       {/* TECH STACK */}
       <section className="mx-auto max-w-6xl px-6 py-32">
         <SectionHeader
-          eyebrow="The toolkit"
-          title="A native-first stack."
-          description="Built around Apple's frameworks. No web wrappers. No compromises."
+          eyebrow={home?.skillsSection?.subTitle}
+          title={home?.skillsSection?.title ?? ""}
+          description={home?.skillsSection?.description}
           align="center"
         />
         <div className="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-          {stack.map(({ name, icon: Icon }, i) => (
+          {home?.skillsSection?.skills?.map(({ name, svgCode }, i) => (
             <Reveal key={name} delay={i * 0.03}>
               <div className="group flex flex-col items-center gap-3 rounded-2xl border border-border bg-card p-6 transition-all duration-500 hover:-translate-y-1 hover:border-border-strong hover:shadow-glass">
-                <Icon className="h-5 w-5 text-accent transition-transform duration-500 group-hover:scale-110" />
-                <span className="text-sm font-medium text-foreground/90">{name}</span>
+                <div
+                  className="text-accent transition-transform duration-500 group-hover:scale-110"
+                  dangerouslySetInnerHTML={{ __html: svgCode ?? "" }}
+                />
+
+                <span>{name}</span>
               </div>
             </Reveal>
           ))}
@@ -235,13 +208,15 @@ function HomePage() {
       <section className="mx-auto max-w-6xl px-6 py-32">
         <Reveal>
           <div className="rounded-3xl border border-border bg-gradient-to-br from-surface to-card p-12 sm:p-20 noise-overlay">
-            <p className="text-eyebrow text-accent">Impact</p>
-            <h2 className="mt-3 text-display-lg">A decade of measured results.</h2>
+            <p className="text-eyebrow text-accent">{home?.impactSection?.subTitle}</p>
+            <h2 className="mt-3 text-display-lg">{home?.impactSection?.title}</h2>
             <div className="mt-12 grid grid-cols-2 gap-10 sm:grid-cols-4">
-              {metrics.map((m, i) => (
+              {home?.impactSection?.stats?.map((m, i) => (
                 <Reveal key={m.label} delay={i * 0.08}>
                   <div>
-                    <p className="text-display-lg !text-5xl text-foreground sm:!text-6xl">{m.value}</p>
+                    <p className="text-display-lg !text-5xl text-foreground sm:!text-6xl">
+                      {m.value}
+                    </p>
                     <p className="mt-2 text-sm text-muted-foreground">{m.label}</p>
                   </div>
                 </Reveal>
@@ -268,48 +243,33 @@ function HomePage() {
           ))}
         </div>
         <div className="mt-10">
-          <Link to="/experience" className="group inline-flex items-center gap-1.5 text-sm font-medium text-accent">
-            Full timeline <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+          <Link
+            to="/experience"
+            className="group inline-flex items-center gap-1.5 text-sm font-medium text-accent"
+          >
+            Full timeline{" "}
+            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </div>
       </section>
-
-      {/*/!* TESTIMONIALS *!/*/}
-      {/*<section className="mx-auto max-w-6xl px-6 py-32">*/}
-      {/*  <SectionHeader eyebrow="Recommendations" title="What collaborators say." align="center" />*/}
-      {/*  <div className="mt-14 grid gap-6 md:grid-cols-3">*/}
-      {/*    {testimonials.map((t, i) => (*/}
-      {/*      <Reveal key={t.author} delay={i * 0.08}>*/}
-      {/*        <figure className="flex h-full flex-col rounded-3xl border border-border bg-card p-8 shadow-glass">*/}
-      {/*          <blockquote className="text-base leading-relaxed text-foreground/90">"{t.quote}"</blockquote>*/}
-      {/*          <figcaption className="mt-6 border-t border-border pt-6">*/}
-      {/*            <p className="text-sm font-medium text-foreground">{t.author}</p>*/}
-      {/*            <p className="text-sm text-muted-foreground">{t.role}</p>*/}
-      {/*          </figcaption>*/}
-      {/*        </figure>*/}
-      {/*      </Reveal>*/}
-      {/*    ))}*/}
-      {/*  </div>*/}
-      {/*</section>*/}
 
       {/* CTA */}
       <section className="mx-auto max-w-6xl px-6 pb-32">
         <Reveal>
           <div className="relative overflow-hidden rounded-3xl border border-border bg-foreground px-8 py-20 text-center text-background sm:px-16 sm:py-28">
             <div className="absolute inset-0 -z-10 grad-aurora opacity-40" />
-            <p className="text-eyebrow text-background/70">Let's build</p>
-            <h2 className="mx-auto mt-3 max-w-3xl text-display-xl">
-              Have an iOS product worth obsessing over?
-            </h2>
+            <p className="text-eyebrow text-background/70">{home?.ctaSection?.eyebrow}</p>
+            <h2 className="mx-auto mt-3 max-w-3xl text-display-xl">{home?.ctaSection?.title}</h2>
             <p className="mx-auto mt-5 max-w-xl text-base text-background/75">
-              I take on a small number of engagements each year. Tell me about yours.
+              {home?.ctaSection?.description}
             </p>
             <div className="mt-10">
               <Link
                 to="/contact"
                 className="group inline-flex items-center gap-1.5 rounded-full bg-background px-6 py-3 text-sm font-medium text-foreground transition-all duration-300 hover:gap-2.5"
               >
-                Start a conversation <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+                Start a conversation{" "}
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
               </Link>
             </div>
           </div>
