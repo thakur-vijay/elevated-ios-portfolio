@@ -104,7 +104,7 @@ function AboutPage() {
               to="/contact"
               className="mt-8 inline-flex items-center gap-1.5 rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition-all duration-300 hover:gap-2.5"
             >
-              Say hello <ArrowRight className="h-4 w-4" />
+              Say Hello <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </Reveal>
