@@ -177,9 +177,9 @@ function HomePage() {
       {/* FEATURED PROJECTS */}
       <section className="mx-auto max-w-6xl px-6 pb-24">
         <SectionHeader
-          eyebrow="Selected work"
-          title="Apps shipped with intention."
-          description="Each one engineered end-to-end with native frameworks and obsessive attention to motion, performance, and product feel."
+          eyebrow={home?.workSection?.subTitle}
+          title={home?.workSection?.title ?? ""}
+          description={home?.workSection?.description}
         />
         <div className="mt-16 space-y-12">
           {projects.map((p, i) => (
@@ -236,7 +236,10 @@ function HomePage() {
 
       {/* EXPERIENCE PREVIEW */}
       <section className="mx-auto max-w-4xl px-6 py-32">
-        <SectionHeader eyebrow="Experience" title="Ten years of building for Apple platforms." />
+        <SectionHeader
+          eyebrow={home?.experienceSection?.subTitle}
+          title={home?.experienceSection?.title ?? ""}
+        />
         <div className="mt-14 divide-y divide-border border-y border-border">
           {homeExperience?.map((e, i) => (
             <Reveal key={e.role} delay={i * 0.05}>
@@ -245,7 +248,9 @@ function HomePage() {
                   <h3 className="text-lg font-semibold text-foreground">{e.role}</h3>
                   <p className="text-sm text-muted-foreground">{e.company}</p>
                 </div>
-                <p className="shrink-0 text-sm text-muted-foreground tabular-nums">{formatExperienceDuration(e?.startDate, e?.endDate)}</p>
+                <p className="shrink-0 text-sm text-muted-foreground tabular-nums">
+                  {formatExperienceDuration(e?.startDate, e?.endDate)}
+                </p>
               </div>
             </Reveal>
           ))}

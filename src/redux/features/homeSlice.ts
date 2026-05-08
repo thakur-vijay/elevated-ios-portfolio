@@ -33,6 +33,7 @@ const homeSlice = createSlice({
       .addCase(fetchHomeResponse.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.home = action.payload;
+        console.log(action.payload);
       })
       .addCase(fetchHomeResponse.rejected, (state, action) => {
         state.status = "failed";

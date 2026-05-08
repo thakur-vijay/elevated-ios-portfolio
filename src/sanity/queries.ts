@@ -5,6 +5,8 @@ export const getHomeQuery = `*[_type == "home"][0]{
   philosophySection,
   skillsSection,
   impactSection,
+  experienceSection,
+  workSection,
   ctaSection
 }`;
 
