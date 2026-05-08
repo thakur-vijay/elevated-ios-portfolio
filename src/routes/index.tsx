@@ -11,9 +11,10 @@ import { useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
 import { fetchHomeResponse } from "../redux/features/homeSlice";
 import { fetchHomeExperienceResponse} from "@/redux/features/homeExperienceSlice.ts";
+import { fetchHomeProjectResponse} from "@/redux/features/homeProjectSlice.ts";
 import { useSelector } from "react-redux";
 import { AppDispatch } from "../redux/store";
-import { formatExperienceDuration} from "@/routes/experience.tsx";
+import { formatExperienceDuration } from "@/routes/experience.tsx";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -34,13 +35,6 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-const experience = [
-  { year: "2024 — Now", role: "Principal iOS Engineer", company: "Yatts" },
-  { year: "2021 — 2024", role: "Senior iOS Engineer", company: "Northwind Travel" },
-  { year: "2018 — 2021", role: "iOS Engineer", company: "Helio Health" },
-  { year: "2015 — 2018", role: "iOS Developer", company: "Rivet Studio" },
-];
-
 function HomePage() {
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
@@ -56,6 +50,8 @@ function HomePage() {
     (state: RootState) => state.homeExperience,
   );
 
+  const { homeProject, status: status3 } = useSelector((state: RootState) => state.homeProject);
+
   useEffect(() => {
     if (status1 === "idle") {
       dispatch(fetchHomeResponse());
@@ -63,7 +59,10 @@ function HomePage() {
     if (status2 === "idle") {
       dispatch(fetchHomeExperienceResponse());
     }
-  }, [status1, dispatch]);
+    if (status3 === "idle") {
+      dispatch(fetchHomeProjectResponse());
+    }
+  }, [status1, status2, status3, dispatch]);
   return (
     <>
       {/* HERO */}
@@ -182,8 +181,8 @@ function HomePage() {
           description={home?.workSection?.description}
         />
         <div className="mt-16 space-y-12">
-          {projects.map((p, i) => (
-            <AppCard key={p.slug} project={p} reverse={i % 2 === 1} />
+          {homeProject?.map((p) => (
+            <AppCard key={p._id} project={p} />
           ))}
         </div>
       </section>

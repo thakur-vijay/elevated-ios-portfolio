@@ -57,3 +57,32 @@ export const getHomeExperienceQuery = `
     endDate
   }
 `;
+
+// Home Screen Projects Query
+// Fetch lightweight data only
+
+export const getHomeProjectsQuery = `
+  *[_type == "project"] | order(_createdAt desc)[0...3] {
+    appName,
+    tagline,
+    appType,
+    appIcon,
+    coverImage,
+    description,
+    techStack,
+    screenshots
+  }
+`;
+
+export const getProjectsQuery = `
+  *[_type == "project"] | order(_createdAt desc) {
+    appName,
+    tagline,
+    appType,
+    appIcon,
+    coverImage,
+    description,
+    techStack,
+    screenshots
+  }
+`;

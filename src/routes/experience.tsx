@@ -6,74 +6,22 @@ import { fetchExperiencePageResponse } from "../redux/features/experiencePageSli
 import { fetchExperienceResponse } from "../redux/features/experienceSlice.ts";
 import { useSelector } from "react-redux";
 import { AppDispatch } from "../redux/store";
-import { PortableText } from "@portabletext/react";
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/experience")({
   head: () => ({
     meta: [
       { title: "Experience — Adrian Vale" },
-      { name: "description", content: "A decade of native iOS roles, projects, and platform expertise." },
+      {
+        name: "description",
+        content: "A decade of native iOS roles, projects, and platform expertise.",
+      },
       { property: "og:title", content: "Experience — Adrian Vale" },
       { property: "og:description", content: "A decade of native iOS engineering roles." },
     ],
   }),
   component: ExperiencePage,
 });
-
-const roles = [
-  {
-    year: "2024 — Now",
-    role: "Principal iOS Engineer",
-    company: "Yatts",
-    summary: "Leading native iOS for a music platform serving half a million monthly listeners. Owner of playback engine, spatial audio, and the artist tooling apps.",
-    points: [
-      "Architected gapless playback pipeline replacing AVQueuePlayer.",
-      "Shipped Dolby Atmos head-tracking for AirPods Pro.",
-      "Mentor and tech lead for a 4-person iOS team.",
-    ],
-  },
-  {
-    year: "2021 — 2024",
-    role: "Senior iOS Engineer",
-    company: "Northwind Travel",
-    summary: "Built MyTuur from concept to App Store, leading product engineering across map rendering, sync, and offline-first architecture.",
-    points: [
-      "Reduced cold start by 73% (1.4s → 380ms).",
-      "Designed CRDT-inspired CloudKit sync layer.",
-      "Featured app launch in 14 countries.",
-    ],
-  },
-  {
-    year: "2018 — 2021",
-    role: "iOS Engineer",
-    company: "Helio Health",
-    summary: "Senior contributor to a HealthKit-integrated wellness platform with strict privacy and performance requirements.",
-    points: [
-      "Owned HealthKit ingestion and on-device ML inference.",
-      "Migrated 200K LOC from Objective-C to Swift.",
-      "Reduced app size by 38% via modularization.",
-    ],
-  },
-  {
-    year: "2015 — 2018",
-    role: "iOS Developer",
-    company: "Rivet Studio",
-    summary: "Generalist iOS developer at a boutique studio shipping client apps for finance, retail, and lifestyle brands.",
-    points: [
-      "Shipped 11 App Store apps over three years.",
-      "Built reusable internal SDK adopted across projects.",
-      "Introduced SwiftUI in 2020 as a senior advocate.",
-    ],
-  },
-];
-
-const certs = [
-  "WWDC Scholarship Recipient",
-  "Apple Developer Academy Mentor",
-  "Speaker · iOSDevUK 2023",
-  "Speaker · NSSpain 2022",
-];
 
 export const formatExperienceDuration = (startDate?: string, endDate?: string | null): string => {
   if (!startDate) return "";
@@ -118,7 +66,7 @@ function ExperiencePage() {
         </Reveal>
         <Reveal delay={0.1}>
           <p className="mt-7 max-w-2xl text-xl text-muted-foreground">
-          {experiencePage?.description}
+            {experiencePage?.description}
           </p>
         </Reveal>
       </section>

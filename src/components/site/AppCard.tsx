@@ -3,8 +3,16 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import type { Project } from "@/lib/projects";
 import { cn } from "@/lib/utils";
+import { ProjectResponse } from "@/models/project.ts";
+import { urlFor } from "@/sanity/sanityService.ts";
 
-export function AppCard({ project, reverse = false }: { project: Project; reverse?: boolean }) {
+export function AppCard({
+  project,
+  reverse = false,
+}: {
+  project: ProjectResponse;
+  reverse?: boolean;
+}) {
   return (
     <motion.article
       initial={{ opacity: 0, y: 40 }}
@@ -13,14 +21,26 @@ export function AppCard({ project, reverse = false }: { project: Project; revers
       transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
       className="relative overflow-hidden rounded-3xl border border-border/70 bg-card shadow-card"
     >
-      <div className={cn("absolute inset-0 -z-10 bg-gradient-to-br", project.accent)} />
-      <div className={cn("grid gap-10 p-8 sm:p-12 lg:grid-cols-2 lg:gap-16 lg:p-16", reverse && "lg:[&>*:first-child]:order-2")}>
+      <div className={cn("absolute inset-0 -z-10 bg-gradient-to-br")} />
+      <div
+        className={cn(
+          "grid gap-10 p-8 sm:p-12 lg:grid-cols-2 lg:gap-16 lg:p-16",
+          reverse && "lg:[&>*:first-child]:order-2",
+        )}
+      >
         <div className="flex flex-col justify-center">
           <div className="flex items-center gap-3">
-            <img src={project.icon} alt="" width={48} height={48} loading="lazy" className="h-12 w-12 rounded-[12px] shadow-md" />
+            <img
+              src={urlFor(project.appIcon).url()}
+              alt={project.appName}
+              width={48}
+              height={48}
+              loading="lazy"
+              className="h-12 w-12 rounded-[12px] shadow-md object-cover"
+            />
             <div>
-              <p className="text-eyebrow text-muted-foreground">{project.category} · {project.year}</p>
-              <h3 className="mt-1 text-2xl font-semibold tracking-tight">{project.name}</h3>
+              <p className="text-eyebrow text-muted-foreground">{project.appType}</p>
+              <h3 className="mt-1 text-2xl font-semibold tracking-tight">{project.appName}</h3>
             </div>
           </div>
 
@@ -30,8 +50,11 @@ export function AppCard({ project, reverse = false }: { project: Project; revers
           <p className="mt-5 max-w-md text-base text-muted-foreground">{project.description}</p>
 
           <div className="mt-7 flex flex-wrap gap-2">
-            {project.stack.slice(0, 5).map((s) => (
-              <span key={s} className="rounded-full border border-border bg-background/60 px-3 py-1 text-xs text-foreground/80">
+            {project.techStack?.slice(0, 5).map((s) => (
+              <span
+                key={s}
+                className="rounded-full border border-border bg-background/60 px-3 py-1 text-xs text-foreground/80"
+              >
                 {s}
               </span>
             ))}
@@ -39,7 +62,7 @@ export function AppCard({ project, reverse = false }: { project: Project; revers
 
           <Link
             to="/projects/$slug"
-            params={{ slug: project.slug }}
+            params={{ slug: project._id }}
             className="group mt-8 inline-flex w-fit items-center gap-1.5 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-all duration-300 hover:gap-2.5 hover:shadow-glass"
           >
             View project
@@ -50,8 +73,8 @@ export function AppCard({ project, reverse = false }: { project: Project; revers
         <div className="relative flex items-center justify-center">
           <div className="absolute inset-0 -z-10 grad-aurora rounded-[2rem] blur-2xl opacity-60" />
           <motion.img
-            src={project.hero}
-            alt={`${project.name} app screenshot`}
+            src={urlFor(project.screenshots?.[0]).url()}
+            alt={`${project.appName} app screenshot`}
             width={420}
             height={860}
             loading="lazy"

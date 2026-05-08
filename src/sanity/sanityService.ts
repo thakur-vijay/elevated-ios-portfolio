@@ -1,4 +1,5 @@
 import client from "./sanityClient.ts";
+import imageUrlBuilder from "@sanity/image-url";
 import {
   getUserQuery,
   getFooterQuery,
@@ -7,6 +8,8 @@ import {
   getExperiencePageQuery,
   getExperienceQuery,
   getHomeExperienceQuery,
+  getHomeProjectsQuery,
+  getProjectsQuery,
 } from "@/sanity/queries.ts";
 export const fetchHomeData = async () => {
   try {
@@ -75,3 +78,29 @@ export const fetchHomeExperienceData = async () => {
     return [];
   }
 };
+
+export const fetchHomeProjectData = async () => {
+  try {
+    console.log("Fetching home data...");
+    return await client.fetch(getHomeProjectsQuery);
+  } catch (err) {
+    console.error("Error fetching home:", err);
+    return [];
+  }
+};
+
+export const fetchProjectData = async () => {
+  try {
+    console.log("Fetching home data...");
+    return await client.fetch(getProjectsQuery);
+  } catch (err) {
+    console.error("Error fetching home:", err);
+    return [];
+  }
+};
+
+const builder = imageUrlBuilder(client);
+
+export function urlFor(source: any) {
+  return builder.image(source);
+}
