@@ -21,7 +21,7 @@ export const getFooterQuery = `*[_type == "footer"][0]{
   }
 }`;
 
-export const getAboutQuery = `*[_type == "about"][0]{
+export const getUserQuery = `*[_type == "user"][0]{
   _id,
   _type,
   name,
@@ -31,4 +31,13 @@ export const getAboutQuery = `*[_type == "about"][0]{
     twitter,
     mail
   }
+}`;
+
+export const getAboutQuery = `*[_type == "about"][0]{
+  _id,
+  _type,
+  aboutSection,
+  principleSection,
+  beyondCodeSection,
+  collaborationMessage
 }`;

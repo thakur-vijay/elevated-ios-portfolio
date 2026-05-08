@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import homeReducer from "./features/homeSlice";
 import footerReducer from "./features/footerSlice";
+import userReducer from "./features/userSlice";
 import aboutReducer from "./features/aboutSlice";
 export const store = configureStore({
   reducer: {
     home: homeReducer,
     footer: footerReducer,
+    user: userReducer,
     about: aboutReducer,
   },
 });

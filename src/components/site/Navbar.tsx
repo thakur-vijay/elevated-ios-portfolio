@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Apple } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useAbout } from "@/context/AboutContext";
+import { useUser } from "../../context/UserContext";
 
 const links = [
   { to: "/", label: "Home" },
@@ -17,7 +17,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { location } = useRouterState();
-  const about = useAbout();
+  const user = useUser();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -32,26 +32,26 @@ export function Navbar() {
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-500",
-        scrolled ? "glass-strong border-b border-border/60" : "bg-transparent"
+        scrolled ? "glass-strong border-b border-border/60" : "bg-transparent",
       )}
     >
       <nav className="mx-auto flex h-12 max-w-6xl items-center justify-between px-6 text-[13px]">
         <Link to="/" className="flex items-center gap-2 font-medium tracking-tight">
           <Apple className="h-4 w-4" strokeWidth={2.4} />
-          <span>{about?.name}</span>
+          <span>{user?.name}</span>
         </Link>
 
         <ul className="hidden items-center gap-8 md:flex">
           {links.map((l) => {
-            const active = location.pathname === l.to ||
-              (l.to !== "/" && location.pathname.startsWith(l.to));
+            const active =
+              location.pathname === l.to || (l.to !== "/" && location.pathname.startsWith(l.to));
             return (
               <li key={l.to}>
                 <Link
                   to={l.to}
                   className={cn(
                     "relative text-foreground/80 transition-colors duration-300 hover:text-foreground",
-                    active && "text-foreground"
+                    active && "text-foreground",
                   )}
                 >
                   {l.label}

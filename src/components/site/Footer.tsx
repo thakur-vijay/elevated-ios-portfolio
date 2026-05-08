@@ -7,12 +7,12 @@ import { useSelector } from "react-redux";
 import { AppDispatch } from "../../redux/store";
 import { useEffect } from "react";
 import { fetchFooterResponse } from "@/redux/features/footerSlice.ts";
-import { useAbout } from "@/context/AboutContext";
+import { useUser } from "../../context/UserContext";
 
 export function Footer() {
   const dispatch = useDispatch<AppDispatch>();
   const { footer, status } = useSelector((state: RootState) => state.footer);
-  const about = useAbout();
+  const user = useUser();
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchFooterResponse());
@@ -25,7 +25,7 @@ export function Footer() {
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 text-sm font-medium">
               <Apple className="h-4 w-4" strokeWidth={2.4} />
-              {about?.name}
+              {user?.name}
             </div>
             <p className="mt-4 max-w-sm text-sm text-muted-foreground">
               Senior iOS Engineer crafting premium native experiences for the Apple ecosystem.
@@ -62,10 +62,10 @@ export function Footer() {
             <p className="text-eyebrow text-muted-foreground">Connect</p>
             <ul className="mt-4 flex gap-2">
               <ul className="mt-4 flex gap-2">
-                {about?.socialLinks?.github && (
+                {user?.socialLinks?.github && (
                   <li>
                     <a
-                      href={about.socialLinks.github}
+                      href={user.socialLinks.github}
                       target="_blank"
                       rel="noreferrer"
                       aria-label="GitHub"
@@ -76,10 +76,10 @@ export function Footer() {
                   </li>
                 )}
 
-                {about?.socialLinks?.linkedin && (
+                {user?.socialLinks?.linkedin && (
                   <li>
                     <a
-                      href={about.socialLinks.linkedin}
+                      href={user.socialLinks.linkedin}
                       target="_blank"
                       rel="noreferrer"
                       aria-label="LinkedIn"
@@ -90,10 +90,10 @@ export function Footer() {
                   </li>
                 )}
 
-                {about?.socialLinks?.twitter && (
+                {user?.socialLinks?.twitter && (
                   <li>
                     <a
-                      href={about.socialLinks.twitter}
+                      href={user.socialLinks.twitter}
                       target="_blank"
                       rel="noreferrer"
                       aria-label="Twitter"
@@ -104,10 +104,10 @@ export function Footer() {
                   </li>
                 )}
 
-                {about?.socialLinks?.mail && (
+                {user?.socialLinks?.mail && (
                   <li>
                     <a
-                      href={about.socialLinks.mail}
+                      href={user.socialLinks.mail}
                       aria-label="Email"
                       className="grid h-10 w-10 place-items-center rounded-full border border-border bg-card text-foreground/70 transition-all duration-300 hover:-translate-y-0.5 hover:border-border-strong hover:text-foreground hover:shadow-glass"
                     >

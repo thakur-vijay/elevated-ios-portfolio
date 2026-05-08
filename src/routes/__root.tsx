@@ -16,9 +16,9 @@ import { ThemeToggle } from "@/components/site/ThemeToggle";
 import { Provider, useDispatch } from "react-redux";
 import { store, AppDispatch, RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
-import { fetchAboutResponse } from "@/redux/features/aboutSlice.ts";
+import { fetchUserResponse } from "../redux/features/userSlice.ts";
 import { fetchFooterResponse } from "@/redux/features/footerSlice.ts";
-import { AboutContext } from "@/context/AboutContext.tsx";
+import { UserContext } from "../context/UserContext.tsx";
 
 function NotFoundComponent() {
   return (
@@ -93,21 +93,21 @@ function RootComponent() {
   );
 }
 
-function RootContent(){
+function RootContent() {
   const { location } = useRouterState();
   const dispatch = useDispatch<AppDispatch>();
-  const { about, status } = useSelector((state: RootState) => state.about);
+  const { user, status } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     if (status === "idle") {
-      dispatch(fetchAboutResponse());
+      dispatch(fetchUserResponse());
     }
   }, [status, dispatch]);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
   return (
-    <AboutContext.Provider value={about}>
+    <UserContext.Provider value={user}>
       <Navbar />
       <main className="min-h-screen pt-12">
         <AnimatePresence mode="wait">
@@ -124,6 +124,6 @@ function RootContent(){
       </main>
       <Footer />
       <ThemeToggle />
-    </AboutContext.Provider>
+    </UserContext.Provider>
   );
 }

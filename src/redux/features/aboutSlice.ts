@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchAboutData } from "../../sanity/sanityService";
-import { AboutResponse } from "@/models/about.ts";
+import { AboutResponse } from "../../models/about.ts";
 
 interface AboutState {
   about: AboutResponse | null;
@@ -30,6 +30,7 @@ const aboutSlice = createSlice({
       .addCase(fetchAboutResponse.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.about = action.payload;
+        console.log(action.payload);
       })
       .addCase(fetchAboutResponse.rejected, (state, action) => {
         state.status = "failed";
