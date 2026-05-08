@@ -41,3 +41,17 @@ export const getAboutQuery = `*[_type == "about"][0]{
   beyondCodeSection,
   collaborationMessage
 }`;
+
+export const getExperiencePageQuery = `*[_type == "experiencePage"][0]`;
+
+export const getExperienceQuery = `*[_type == "experience"] | order(startDate desc)`;
+
+export const getHomeExperienceQuery = `
+  *[_type == "experience"]
+  | order(startDate desc)[0...2]{
+    role,
+    company,
+    startDate,
+    endDate
+  }
+`;

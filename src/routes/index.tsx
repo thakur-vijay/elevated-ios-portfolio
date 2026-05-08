@@ -10,8 +10,10 @@ import { Reveal } from "@/components/site/Reveal";
 import { useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
 import { fetchHomeResponse } from "../redux/features/homeSlice";
+import { fetchHomeExperienceResponse} from "@/redux/features/homeExperienceSlice.ts";
 import { useSelector } from "react-redux";
 import { AppDispatch } from "../redux/store";
+import { formatExperienceDuration} from "@/routes/experience.tsx";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -49,13 +51,19 @@ function HomePage() {
   const headlineOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   const dispatch = useDispatch<AppDispatch>();
-  const { home, status } = useSelector((state: RootState) => state.home);
+  const { home, status: status1 } = useSelector((state: RootState) => state.home);
+  const { experience: homeExperience, status: status2 } = useSelector(
+    (state: RootState) => state.homeExperience,
+  );
 
   useEffect(() => {
-    if (status === "idle") {
+    if (status1 === "idle") {
       dispatch(fetchHomeResponse());
     }
-  }, [status, dispatch]);
+    if (status2 === "idle") {
+      dispatch(fetchHomeExperienceResponse());
+    }
+  }, [status1, dispatch]);
   return (
     <>
       {/* HERO */}
@@ -230,14 +238,14 @@ function HomePage() {
       <section className="mx-auto max-w-4xl px-6 py-32">
         <SectionHeader eyebrow="Experience" title="Ten years of building for Apple platforms." />
         <div className="mt-14 divide-y divide-border border-y border-border">
-          {experience.map((e, i) => (
+          {homeExperience?.map((e, i) => (
             <Reveal key={e.role} delay={i * 0.05}>
               <div className="flex items-baseline justify-between gap-6 py-6">
                 <div>
                   <h3 className="text-lg font-semibold text-foreground">{e.role}</h3>
                   <p className="text-sm text-muted-foreground">{e.company}</p>
                 </div>
-                <p className="shrink-0 text-sm text-muted-foreground tabular-nums">{e.year}</p>
+                <p className="shrink-0 text-sm text-muted-foreground tabular-nums">{formatExperienceDuration(e?.startDate, e?.endDate)}</p>
               </div>
             </Reveal>
           ))}

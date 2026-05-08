@@ -3,12 +3,18 @@ import homeReducer from "./features/homeSlice";
 import footerReducer from "./features/footerSlice";
 import userReducer from "./features/userSlice";
 import aboutReducer from "./features/aboutSlice";
+import experienceReducer from "./features/experienceSlice";
+import experiencePageReducer from "./features/experiencePageSlice";
+import homeExperienceReducer from "./features/homeExperienceSlice";
 export const store = configureStore({
   reducer: {
     home: homeReducer,
     footer: footerReducer,
     user: userReducer,
     about: aboutReducer,
+    experiencePage: experiencePageReducer,
+    experience: experienceReducer,
+    homeExperience: homeExperienceReducer,
   },
 });
 
