@@ -10,6 +10,7 @@ import {
   getHomeExperienceQuery,
   getHomeProjectsQuery,
   getProjectsQuery,
+  getContactPageQuery,
 } from "@/sanity/queries.ts";
 export const fetchHomeData = async () => {
   try {
@@ -93,6 +94,16 @@ export const fetchProjectData = async () => {
   try {
     console.log("Fetching home data...");
     return await client.fetch(getProjectsQuery);
+  } catch (err) {
+    console.error("Error fetching home:", err);
+    return [];
+  }
+};
+
+export const fetchContactPageData = async () => {
+  try {
+    console.log("Fetching home data...");
+    return await client.fetch(getContactPageQuery);
   } catch (err) {
     console.error("Error fetching home:", err);
     return [];

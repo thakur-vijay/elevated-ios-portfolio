@@ -3,6 +3,13 @@ import { useState } from "react";
 import { Mail, Github, Linkedin, Twitter, Send, Check } from "lucide-react";
 import { Reveal } from "@/components/site/Reveal";
 import { useUser } from "../context/UserContext";
+import { useDispatch } from "react-redux";
+import { RootState } from "../redux/store";
+import { fetchContactPageResponse } from "../redux/features/contactPageSlice";
+import { useSelector } from "react-redux";
+import { AppDispatch } from "../redux/store";
+import { useEffect } from "react";
+import { fetchAboutResponse } from "@/redux/features/aboutSlice.ts";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -61,6 +68,14 @@ export const sendContactMail = async (
 function ContactPage() {
   const [sent, setSent] = useState(false);
   const user = useUser();
+  const dispatch = useDispatch<AppDispatch>();
+  const { contactPage, status } = useSelector((state: RootState) => state.contactPage);
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchContactPageResponse());
+    }
+  }, [status, dispatch]);
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -85,15 +100,13 @@ function ContactPage() {
     <>
       <section className="mx-auto max-w-4xl px-6 pb-16 pt-32 sm:pt-40">
         <Reveal>
-          <p className="text-eyebrow text-accent">Contact</p>
+          <p className="text-eyebrow text-accent">{contactPage?.subtitle}</p>
         </Reveal>
         <Reveal delay={0.05}>
-          <h1 className="mt-4 text-display-2xl">Let's make something exceptional.</h1>
+          <h1 className="mt-4 text-display-2xl">{contactPage?.title}</h1>
         </Reveal>
         <Reveal delay={0.1}>
-          <p className="mt-7 max-w-2xl text-xl text-muted-foreground">
-            I respond personally to every message — usually within a day or two.
-          </p>
+          <p className="mt-7 max-w-2xl text-xl text-muted-foreground">{contactPage?.description}</p>
         </Reveal>
       </section>
 

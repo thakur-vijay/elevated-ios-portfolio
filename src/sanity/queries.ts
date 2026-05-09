@@ -76,3 +76,5 @@ export const getProjectsQuery = `
     screenshots
   }
 `;
+
+export const getContactPageQuery = `*[_type == "contactPage"][0]`;

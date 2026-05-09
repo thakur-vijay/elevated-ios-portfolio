@@ -8,6 +8,7 @@ import experiencePageReducer from "./features/experiencePageSlice";
 import homeExperienceReducer from "./features/homeExperienceSlice";
 import projectReducer from "./features/projectSlice";
 import homeProjectReducer from "./features/homeProjectSlice";
+import contactPageReducer from "./features/contactPageSlice";
 export const store = configureStore({
   reducer: {
     home: homeReducer,
@@ -19,6 +20,7 @@ export const store = configureStore({
     homeExperience: homeExperienceReducer,
     project: projectReducer,
     homeProject: homeProjectReducer,
+    contactPage: contactPageReducer,
   },
 });
 
