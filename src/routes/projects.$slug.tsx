@@ -55,21 +55,28 @@ function ProjectDetailPage() {
   const scrollSlider = (dir: 1 | -1) => {
     sliderRef.current?.scrollBy({ left: dir * 320, behavior: "smooth" });
   };
-
-  // const next = projects[(projects.findIndex((p) => p.slug === project.slug) + 1) % projects.length];
-  const isDarkMode = () => {
-    if (typeof window === "undefined") return false;
-
-    const stored = localStorage.getItem("theme");
-
-    if (stored) {
-      return stored === "dark";
+  const [cacheBust, setCacheBust] = useState(Date.now());
+  const getIsDarkMode = () => {
+    if (typeof window === "undefined") {
+      return false;
     }
 
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const stored = localStorage?.getItem("theme");
+    const prefers = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    return stored ? stored === "dark" : prefers;
   };
-  const dark = isDarkMode();
-  const [gradient, setGradient] = useState("linear-gradient(135deg, #ffffff, #f8fafc)");
+
+  const getInitialGradient = () => {
+    setCacheBust(Date.now());
+    const dark = getIsDarkMode();
+    console.log("isDark", dark);
+    return dark
+      ? "linear-gradient(135deg, #111827, #020617)"
+      : "linear-gradient(135deg, #ffffff, #f8fafc)";
+  };
+
+  const [gradient, setGradient] = useState(getInitialGradient);
   const [palette, setPalette] = useState<any[] | null>(null);
 
   const generateGradient = (palette: any[], dark: boolean) => {
@@ -105,17 +112,27 @@ function ProjectDetailPage() {
       if (!colors) return;
 
       setPalette(colors);
-
-      const dark = document.documentElement.classList.contains("dark");
-      setGradient(generateGradient(colors, dark));
+      setGradient(generateGradient(colors, getIsDarkMode()));
     } catch (error) {
       console.error("Gradient error:", error);
     }
   };
 
   useEffect(() => {
+    if (!palette) {
+      setGradient(getInitialGradient());
+      return;
+    }
+
+    setGradient(generateGradient(palette, getIsDarkMode()));
+  }, [palette]);
+
+  useEffect(() => {
     const handleThemeChange = (e: Event) => {
-      if (!palette) return;
+      if (!palette) {
+        setGradient(getInitialGradient());
+        return;
+      }
 
       const customEvent = e as CustomEvent<{ dark: boolean }>;
       setGradient(generateGradient(palette, customEvent.detail.dark));
@@ -127,7 +144,6 @@ function ProjectDetailPage() {
       window.removeEventListener("themechange", handleThemeChange);
     };
   }, [palette]);
-
   return (
     <>
       {/* HERO BANNER */}
@@ -154,8 +170,9 @@ function ProjectDetailPage() {
           </Reveal>
 
           <div className="mt-10 flex flex-col gap-8 sm:flex-row sm:items-end sm:gap-10">
-            <Reveal>
+            <Reveal key={cacheBust}>
               <img
+                key={cacheBust}
                 crossOrigin="anonymous"
                 src={urlFor(project?.appIcon).url()}
                 alt=""
