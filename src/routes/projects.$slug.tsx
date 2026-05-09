@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Download, Star, ArrowLeft, ChevronLeft, ChevronRight, X, Play } from "lucide-react";
 import { Reveal } from "@/components/site/Reveal";
 import { cn } from "@/lib/utils";
@@ -57,51 +57,76 @@ function ProjectDetailPage() {
   };
 
   // const next = projects[(projects.findIndex((p) => p.slug === project.slug) + 1) % projects.length];
+  const isDarkMode = () => {
+    if (typeof window === "undefined") return false;
 
+    const stored = localStorage.getItem("theme");
+
+    if (stored) {
+      return stored === "dark";
+    }
+
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  };
+  const dark = isDarkMode();
   const [gradient, setGradient] = useState("linear-gradient(135deg, #ffffff, #f8fafc)");
+  const [palette, setPalette] = useState<any[] | null>(null);
+
+  const generateGradient = (palette: any[], dark: boolean) => {
+    const soften = (value: number, amount: number) => {
+      return Math.round(value + (255 - value) * amount);
+    };
+
+    const darken = (value: number, amount: number) => {
+      return Math.round(value * amount);
+    };
+
+    const c1 = palette[0];
+    const c2 = palette[1];
+
+    return dark
+      ? `linear-gradient(
+        to bottom,
+        rgb(${darken(c1._r, 0.32)}, ${darken(c1._g, 0.32)}, ${darken(c1._b, 0.32)}) 0%,
+        rgb(${darken(c2._r, 0.18)}, ${darken(c2._g, 0.18)}, ${darken(c2._b, 0.18)}) 100%
+      )`
+      : `linear-gradient(
+        to bottom,
+        rgb(${soften(c1._r, 0.6)}, ${soften(c1._g, 0.6)}, ${soften(c1._b, 0.6)}) 0%,
+        rgb(${soften(c2._r, 0.99)}, ${soften(c2._g, 0.99)}, ${soften(c2._b, 0.99)}) 100%
+      )`;
+  };
+
   const handleIconLoad = async (e: React.SyntheticEvent<HTMLImageElement>) => {
-    console.log("Icon loaded");
     try {
       const img = e.currentTarget;
-      const lighten = (value: number, amount = 0.99) => {
-        return Math.round(value + (255 - value) * amount);
-      };
+      const colors = await getPalette(img);
 
-      const mediumLight = (value: number) => {
-        return Math.round(value + (255 - value) * 0.6);
-      };
+      if (!colors) return;
 
-      const rgb = (r: number, g: number, b: number) => `${r}, ${g}, ${b}`;
+      setPalette(colors);
 
-      const palette = await getPalette(img);
-      if (palette) {
-        const c1 = palette[0];
-        const c2 = palette[1];
-        const generatedGradient = `
-linear-gradient(
-  to bottom,
-  rgb(
-    ${mediumLight(c1._r)},
-    ${mediumLight(c1._g)},
-    ${mediumLight(c1._b)}
-  ) 0%,
-
-  rgb(
-    ${lighten(c2._r)},
-    ${lighten(c2._g)},
-    ${lighten(c2._b)}
-  ) 100%
-)
-`;
-
-        console.log("Gradient is", generatedGradient);
-
-        setGradient(generatedGradient);
-      }
+      const dark = document.documentElement.classList.contains("dark");
+      setGradient(generateGradient(colors, dark));
     } catch (error) {
       console.error("Gradient error:", error);
     }
   };
+
+  useEffect(() => {
+    const handleThemeChange = (e: Event) => {
+      if (!palette) return;
+
+      const customEvent = e as CustomEvent<{ dark: boolean }>;
+      setGradient(generateGradient(palette, customEvent.detail.dark));
+    };
+
+    window.addEventListener("themechange", handleThemeChange);
+
+    return () => {
+      window.removeEventListener("themechange", handleThemeChange);
+    };
+  }, [palette]);
 
   return (
     <>
