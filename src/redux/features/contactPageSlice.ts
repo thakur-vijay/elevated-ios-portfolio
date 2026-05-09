@@ -22,7 +22,7 @@ export const fetchContactPageResponse = createAsyncThunk<ContactPageResponse | n
 );
 
 const contactPageSlice = createSlice({
-  name: "experiencePage",
+  name: "contactPage",
   initialState,
   reducers: {},
   extraReducers: (builder) => {

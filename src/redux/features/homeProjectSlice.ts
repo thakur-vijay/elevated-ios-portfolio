@@ -22,7 +22,7 @@ export const fetchHomeProjectResponse = createAsyncThunk<ProjectResponse[] | nul
 );
 
 const homeProjectSlice = createSlice({
-  name: "project",
+  name: "homeProject",
   initialState,
   reducers: {},
   extraReducers: (builder) => {

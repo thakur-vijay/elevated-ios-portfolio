@@ -78,3 +78,5 @@ export const getProjectsQuery = `
 `;
 
 export const getContactPageQuery = `*[_type == "contactPage"][0]`;
+
+export const getProjectPageQuery = `*[_type == "projectPage"][0]`;

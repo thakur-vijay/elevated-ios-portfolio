@@ -9,6 +9,7 @@ import homeExperienceReducer from "./features/homeExperienceSlice";
 import projectReducer from "./features/projectSlice";
 import homeProjectReducer from "./features/homeProjectSlice";
 import contactPageReducer from "./features/contactPageSlice";
+import projectPageReducer from "./features/projectPageSlice";
 export const store = configureStore({
   reducer: {
     home: homeReducer,
@@ -21,6 +22,7 @@ export const store = configureStore({
     project: projectReducer,
     homeProject: homeProjectReducer,
     contactPage: contactPageReducer,
+    projectPage: projectPageReducer,
   },
 });
 

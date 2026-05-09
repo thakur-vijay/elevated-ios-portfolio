@@ -8,8 +8,7 @@ import { fetchProjectResponse } from "../redux/features/projectSlice.ts";
 import { useSelector } from "react-redux";
 import { AppDispatch } from "../redux/store";
 import { useEffect } from "react";
-import { fetchExperiencePageResponse } from "@/redux/features/experiencePageSlice.ts";
-import { fetchExperienceResponse } from "@/redux/features/experienceSlice.ts";
+import { fetchProjectPageResponse } from "@/redux/features/projectPageSlice.ts";
 import { ProjectResponse } from "@/models/project.ts";
 
 export const Route = createFileRoute("/projects/")({
@@ -30,26 +29,29 @@ export const Route = createFileRoute("/projects/")({
 
 function ProjectsPage() {
   const dispatch = useDispatch<AppDispatch>();
-  const { project, status } = useSelector((state: RootState) => state.project);
+  const { project, status: status1 } = useSelector((state: RootState) => state.project);
+  const { projectPage, status: status2 } = useSelector((state: RootState) => state.projectPage);
 
   useEffect(() => {
-    if (status === "idle") {
+    if (status1 === "idle") {
       dispatch(fetchProjectResponse());
     }
-  }, [status, dispatch]);
+    if (status2 === "idle"){
+      dispatch(fetchProjectPageResponse());
+    }
+  }, [status1, dispatch]);
   return (
     <>
       <section className="mx-auto max-w-5xl px-6 pb-20 pt-32 text-center sm:pt-40">
         <Reveal>
-          <p className="text-eyebrow text-accent">Projects</p>
+          <p className="text-eyebrow text-accent">{projectPage?.subtitle}</p>
         </Reveal>
         <Reveal delay={0.05}>
-          <h1 className="mt-4 text-display-2xl">Work I'm proud to put my name on.</h1>
+          <h1 className="mt-4 text-display-2xl">{projectPage?.title}</h1>
         </Reveal>
         <Reveal delay={0.1}>
           <p className="mx-auto mt-7 max-w-2xl text-lg text-muted-foreground">
-            A small, deliberate catalog of native iOS apps — each engineered end-to-end, from
-            architecture to App Store launch.
+            {projectPage?.description}
           </p>
         </Reveal>
       </section>
