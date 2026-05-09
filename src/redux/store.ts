@@ -10,6 +10,7 @@ import projectReducer from "./features/projectSlice";
 import homeProjectReducer from "./features/homeProjectSlice";
 import contactPageReducer from "./features/contactPageSlice";
 import projectPageReducer from "./features/projectPageSlice";
+import projectDetailReducer from "./features/projectDetailSlice";
 export const store = configureStore({
   reducer: {
     home: homeReducer,
@@ -23,6 +24,7 @@ export const store = configureStore({
     homeProject: homeProjectReducer,
     contactPage: contactPageReducer,
     projectPage: projectPageReducer,
+    projectDetail: projectDetailReducer,
   },
 });
 

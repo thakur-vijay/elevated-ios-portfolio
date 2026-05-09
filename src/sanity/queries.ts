@@ -53,6 +53,7 @@ export const getHomeExperienceQuery = `
 
 export const getHomeProjectsQuery = `
   *[_type == "project"] | order(_createdAt desc)[0...3] {
+    _id,
     appName,
     tagline,
     appType,
@@ -66,6 +67,7 @@ export const getHomeProjectsQuery = `
 
 export const getProjectsQuery = `
   *[_type == "project"] | order(_createdAt desc) {
+    _id,
     appName,
     tagline,
     appType,
@@ -80,3 +82,7 @@ export const getProjectsQuery = `
 export const getContactPageQuery = `*[_type == "contactPage"][0]`;
 
 export const getProjectPageQuery = `*[_type == "projectPage"][0]`;
+
+export const getProjectDetailQuery = `
+  *[_type == "project" && _id == $id][0]
+`;

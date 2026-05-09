@@ -5,6 +5,8 @@ import type { Project } from "@/lib/projects";
 import { cn } from "@/lib/utils";
 import { ProjectResponse } from "@/models/project.ts";
 import { urlFor } from "@/sanity/sanityService.ts";
+import { getPalette } from "colorthief";
+import { useEffect, useRef, useState } from "react";
 
 export function AppCard({
   project,
@@ -13,6 +15,51 @@ export function AppCard({
   project: ProjectResponse;
   reverse?: boolean;
 }) {
+  const [gradient, setGradient] = useState("linear-gradient(135deg, #ffffff, #f8fafc)");
+  const handleIconLoad = async (e: React.SyntheticEvent<HTMLImageElement>) => {
+    console.log("Icon loaded");
+    try {
+      const img = e.currentTarget;
+      const lighten = (value: number, amount = 0.96) => {
+        return Math.round(value + (255 - value) * amount);
+      };
+
+      const mediumLight = (value: number) => {
+        return Math.round(value + (255 - value) * 0.88);
+      };
+
+      const rgb = (r: number, g: number, b: number) => `${r}, ${g}, ${b}`;
+
+      const palette = await getPalette(img);
+      if (palette) {
+        const c1 = palette[0];
+        const c2 = palette[1];
+        const generatedGradient = `
+linear-gradient(
+  to bottom,
+  rgb(
+    ${mediumLight(c1._r)},
+    ${mediumLight(c1._g)},
+    ${mediumLight(c1._b)}
+  ) 0%,
+
+  rgb(
+    ${lighten(c2._r)},
+    ${lighten(c2._g)},
+    ${lighten(c2._b)}
+  ) 100%
+)
+`;
+
+        console.log("Gradient is", generatedGradient);
+
+        setGradient(generatedGradient);
+      }
+
+    } catch (error) {
+      console.error("Gradient error:", error);
+    }
+  };
   return (
     <motion.article
       initial={{ opacity: 0, y: 40 }}
@@ -20,6 +67,9 @@ export function AppCard({
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
       className="relative overflow-hidden rounded-3xl border border-border/70 bg-card shadow-card"
+      style={{
+        background: gradient,
+      }}
     >
       <div className={cn("absolute inset-0 -z-10 bg-gradient-to-br")} />
       <div
@@ -73,10 +123,12 @@ export function AppCard({
         <div className="relative flex items-center justify-center">
           <div className="absolute inset-0 -z-10 grad-aurora rounded-[2rem] blur-2xl opacity-60" />
           <motion.img
+            crossOrigin="anonymous"
             src={urlFor(project.screenshots?.[0]).url()}
             alt={`${project.appName} app screenshot`}
             width={420}
             height={860}
+            onLoad={handleIconLoad}
             loading="lazy"
             className="max-h-[520px] w-auto rounded-[2rem] border border-border/40 shadow-card"
             whileHover={{ y: -6, scale: 1.01 }}

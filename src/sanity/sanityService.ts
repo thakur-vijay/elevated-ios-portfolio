@@ -1,5 +1,5 @@
 import client from "./sanityClient.ts";
-import imageUrlBuilder from "@sanity/image-url";
+import { createImageUrlBuilder } from "@sanity/image-url";
 import {
   getUserQuery,
   getFooterQuery,
@@ -12,7 +12,9 @@ import {
   getProjectsQuery,
   getContactPageQuery,
   getProjectPageQuery,
+  getProjectDetailQuery,
 } from "@/sanity/queries.ts";
+import { ProjectResponse } from "@/models/project.ts";
 export const fetchHomeData = async () => {
   try {
     console.log("Fetching home data...");
@@ -120,7 +122,18 @@ export const fetchProjectPageData = async () => {
   }
 };
 
-const builder = imageUrlBuilder(client);
+export const fetchProjectDetailData = async (id: string): Promise<ProjectResponse | null> => {
+  try {
+    console.log("Fetching project detail...");
+
+    return await client.fetch<ProjectResponse | null>(getProjectDetailQuery, { id });
+  } catch (err) {
+    console.error("Error fetching project detail:", err);
+    return null;
+  }
+};
+
+const builder = createImageUrlBuilder(client);
 
 export function urlFor(source: any) {
   return builder.image(source);
