@@ -2,12 +2,11 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import { Download, Star, ArrowLeft, ChevronLeft, ChevronRight, X, Play } from "lucide-react";
-import { getProject, projects, type Project } from "@/lib/projects";
 import { Reveal } from "@/components/site/Reveal";
 import { cn } from "@/lib/utils";
 import { ProjectResponse } from "@/models/project.ts";
 import { fetchProjectDetailResponse } from "@/redux/features/projectDetailSlice.ts";
-import { fetchProjectDetailData, urlFor } from "@/sanity/sanityService.ts";
+import { fetchProjectDetailData, fileUrl, urlFor } from "@/sanity/sanityService.ts";
 import { getPalette } from "colorthief";
 
 export const Route = createFileRoute("/projects/$slug")({
@@ -154,15 +153,11 @@ linear-gradient(
               <Reveal delay={0.2}>
                 <div className="mt-6 flex flex-wrap items-center gap-3">
                   <a
-                    // href={project.appStoreUrl}
+                    href={project.appStoreUrl}
                     className="group inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-all duration-300 hover:gap-2.5"
                   >
                     <Download className="h-4 w-4" /> App Store
                   </a>
-                  <div className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-4 py-2 text-sm backdrop-blur">
-                    <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                    {/*{project.stats.find((s) => s.label === "Rating")?.value ?? "4.8"}*/}
-                  </div>
                 </div>
               </Reveal>
             </div>
@@ -171,12 +166,14 @@ linear-gradient(
           {/* Stats */}
           <Reveal delay={0.25}>
             <div className="mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-3xl border border-border bg-border sm:grid-cols-4">
-              {/*{project.stats.map((s) => (*/}
-              {/*  <div key={s.label} className="bg-card p-6 text-center">*/}
-              {/*    <p className="text-3xl font-semibold tracking-tight">{s.value}</p>*/}
-              {/*    <p className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">{s.label}</p>*/}
-              {/*  </div>*/}
-              {/*))}*/}
+              {project?.stats?.map((s) => (
+                <div key={s.label} className="bg-card p-6 text-center">
+                  <p className="text-3xl font-semibold tracking-tight">{s.value}</p>
+                  <p className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">
+                    {s.label}
+                  </p>
+                </div>
+              ))}
             </div>
           </Reveal>
         </div>
@@ -208,9 +205,9 @@ linear-gradient(
         <Reveal delay={0.1}>
           <div className="rounded-2xl border border-border bg-card p-6">
             <p className="text-eyebrow text-muted-foreground">Role</p>
-            {/*<p className="mt-2 text-lg">{project.role}</p>*/}
+            <p className="mt-2 text-lg">{project.role}</p>
             <p className="mt-6 text-eyebrow text-muted-foreground">Architecture</p>
-            {/*<p className="mt-2 text-base text-muted-foreground">{project.architecture}</p>*/}
+            <p className="mt-2 text-base text-muted-foreground">{project.architecture}</p>
           </div>
         </Reveal>
       </section>
@@ -220,9 +217,10 @@ linear-gradient(
         <div className="mx-auto max-w-5xl px-6">
           <div className="flex items-end justify-between">
             <Reveal>
-              <p className="text-eyebrow text-accent">Gallery</p>
-              <h2 className="mt-3 text-display-lg">See it in motion.</h2>
+              <p className="text-eyebrow text-accent">{project?.gallerySection?.subtitle}</p>
+              <h2 className="mt-3 text-display-lg">{project?.gallerySection?.title}</h2>
             </Reveal>
+
             <div className="hidden gap-2 sm:flex">
               <button
                 onClick={() => scrollSlider(-1)}
@@ -230,6 +228,7 @@ linear-gradient(
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
+
               <button
                 onClick={() => scrollSlider(1)}
                 className="grid h-10 w-10 place-items-center rounded-full border border-border bg-card transition-colors hover:bg-muted"
@@ -244,12 +243,25 @@ linear-gradient(
           ref={sliderRef}
           className="scrollbar-none mt-10 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-4 sm:px-[max(1.5rem,calc((100vw-64rem)/2))]"
         >
+          {/* APP CLIP FIRST */}
+          {project?.appClip?.asset?._ref && (
+            <motion.div className="relative shrink-0 snap-center overflow-hidden rounded-[2rem] border border-border bg-card shadow-card">
+              <video
+                src={fileUrl(project.appClip.asset._ref)}
+                poster={urlFor(project.hero).url()}
+                controls
+                playsInline
+                preload="none"
+                className="h-[560px] w-[260px] object-cover sm:h-[640px] sm:w-[300px]"
+              />
+            </motion.div>
+          )}
+
+          {/* SCREENSHOTS AFTER VIDEO */}
           {project?.screenshots?.map((src, i) => (
             <motion.button
               key={i}
               onClick={() => setLightbox(i)}
-              whileHover={{ scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 200, damping: 20 }}
               className="relative shrink-0 snap-center overflow-hidden rounded-[2rem] border border-border bg-card shadow-card"
             >
               <img
@@ -265,35 +277,21 @@ linear-gradient(
         </div>
       </section>
 
-      {/* VIDEO PREVIEW */}
-      {/*<section className="mx-auto max-w-5xl px-6 py-20">*/}
-      {/*  <Reveal>*/}
-      {/*    <div className="group relative overflow-hidden rounded-3xl border border-border bg-foreground">*/}
-      {/*      <img src={project.hero} alt="" className="h-[420px] w-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-105" />*/}
-      {/*      <div className="absolute inset-0 grid place-items-center">*/}
-      {/*        <button className="grid h-20 w-20 place-items-center rounded-full bg-background/90 text-foreground backdrop-blur transition-all duration-300 hover:scale-110">*/}
-      {/*          <Play className="h-7 w-7 translate-x-0.5 fill-current" />*/}
-      {/*        </button>*/}
-      {/*      </div>*/}
-      {/*    </div>*/}
-      {/*  </Reveal>*/}
-      {/*</section>*/}
-
       {/* FEATURES */}
       <section className="mx-auto max-w-5xl px-6 py-20">
         <Reveal>
-          <p className="text-eyebrow text-accent">Features</p>
-          <h2 className="mt-3 text-display-lg">What it does, beautifully.</h2>
+          <p className="text-eyebrow text-accent">{project?.featureSection?.subtitle}</p>
+          <h2 className="mt-3 text-display-lg">{project?.featureSection?.title}</h2>
         </Reveal>
         <div className="mt-12 grid gap-4 sm:grid-cols-2">
-          {/*{project.features.map((f, i) => (*/}
-          {/*  <Reveal key={f.title} delay={i * 0.05}>*/}
-          {/*    <div className="rounded-2xl border border-border bg-card p-7 transition-all duration-500 hover:-translate-y-0.5 hover:border-border-strong">*/}
-          {/*      <h3 className="text-lg font-semibold">{f.title}</h3>*/}
-          {/*      <p className="mt-2 text-muted-foreground">{f.description}</p>*/}
-          {/*    </div>*/}
-          {/*  </Reveal>*/}
-          {/*))}*/}
+          {project?.features?.map((f, i) => (
+            <Reveal key={f.title} delay={i * 0.05}>
+              <div className="rounded-2xl border border-border bg-card p-7 transition-all duration-500 hover:-translate-y-0.5 hover:border-border-strong">
+                <h3 className="text-lg font-semibold">{f.title}</h3>
+                <p className="mt-2 text-muted-foreground">{f.description}</p>
+              </div>
+            </Reveal>
+          ))}
         </div>
       </section>
 
@@ -301,66 +299,57 @@ linear-gradient(
       <section className="mx-auto grid max-w-5xl gap-10 px-6 py-20 md:grid-cols-2">
         <div>
           <Reveal>
-            <p className="text-eyebrow text-accent">Engineering challenges</p>
-            <h3 className="mt-3 text-2xl font-semibold">Hard problems, calmly solved.</h3>
+            <p className="text-eyebrow text-accent">{project?.challengeSection?.subtitle}</p>
+            <h3 className="mt-3 text-2xl font-semibold">{project?.challengeSection?.title}</h3>
           </Reveal>
           <ul className="mt-8 space-y-6">
-            {/*{project.challenges.map((c, i) => (*/}
-            {/*  <Reveal key={c.title} delay={i * 0.05}>*/}
-            {/*    <li>*/}
-            {/*      <p className="font-medium">{c.title}</p>*/}
-            {/*      <p className="mt-1.5 text-muted-foreground">{c.description}</p>*/}
-            {/*    </li>*/}
-            {/*  </Reveal>*/}
-            {/*))}*/}
+            {project?.challenges?.map((c, i) => (
+              <Reveal key={c.title} delay={i * 0.05}>
+                <li>
+                  <p className="font-medium">{c.title}</p>
+                  <p className="mt-1.5 text-muted-foreground">{c.description}</p>
+                </li>
+              </Reveal>
+            ))}
           </ul>
         </div>
         <div>
           <Reveal>
-            <p className="text-eyebrow text-accent">Performance</p>
-            <h3 className="mt-3 text-2xl font-semibold">Engineered for the frame budget.</h3>
+            <p className="text-eyebrow text-accent">{project?.performanceSection?.subtitle}</p>
+            <h3 className="mt-3 text-2xl font-semibold">{project?.performanceSection?.title}</h3>
           </Reveal>
-          {/*<ul className="mt-8 space-y-6">*/}
-          {/*  {project.performance.map((c, i) => (*/}
-          {/*    <Reveal key={c.title} delay={i * 0.05}>*/}
-          {/*      <li>*/}
-          {/*        <p className="font-medium">{c.title}</p>*/}
-          {/*        <p className="mt-1.5 text-muted-foreground">{c.description}</p>*/}
-          {/*      </li>*/}
-          {/*    </Reveal>*/}
-          {/*  ))}*/}
-          {/*</ul>*/}
+          <ul className="mt-8 space-y-6">
+            {project?.performance?.map((c, i) => (
+              <Reveal key={c.title} delay={i * 0.05}>
+                <li>
+                  <p className="font-medium">{c.title}</p>
+                  <p className="mt-1.5 text-muted-foreground">{c.description}</p>
+                </li>
+              </Reveal>
+            ))}
+          </ul>
         </div>
       </section>
 
       {/* TIMELINE */}
-      {/*<section className="mx-auto max-w-5xl px-6 py-20">*/}
-      {/*  <Reveal>*/}
-      {/*    <p className="text-eyebrow text-accent">Build process</p>*/}
-      {/*    <h2 className="mt-3 text-display-lg">From idea to App Store.</h2>*/}
-      {/*  </Reveal>*/}
-      {/*  <ol className="mt-14 space-y-px overflow-hidden rounded-2xl border border-border">*/}
-      {/*    {project.timeline.map((t, i) => (*/}
-      {/*      <Reveal key={t.phase} delay={i * 0.05}>*/}
-      {/*        <li className="flex flex-col gap-2 bg-card p-7 sm:flex-row sm:items-baseline sm:gap-10">*/}
-      {/*          <p className="w-32 shrink-0 text-sm font-medium text-accent">0{i + 1} · {t.phase}</p>*/}
-      {/*          <p className="text-base text-muted-foreground">{t.description}</p>*/}
-      {/*        </li>*/}
-      {/*      </Reveal>*/}
-      {/*    ))}*/}
-      {/*  </ol>*/}
-      {/*</section>*/}
-
-      {/* TESTIMONIAL */}
-      {/*<section className="mx-auto max-w-4xl px-6 py-20 text-center">*/}
-      {/*  <Reveal>*/}
-      {/*    <blockquote className="text-display-lg !text-3xl !leading-snug sm:!text-4xl">*/}
-      {/*      "{project.testimonial.quote}"*/}
-      {/*    </blockquote>*/}
-      {/*    <p className="mt-8 text-sm font-medium">{project.testimonial.author}</p>*/}
-      {/*    <p className="text-sm text-muted-foreground">{project.testimonial.role}</p>*/}
-      {/*  </Reveal>*/}
-      {/*</section>*/}
+      <section className="mx-auto max-w-5xl px-6 py-20">
+        <Reveal>
+          <p className="text-eyebrow text-accent">{project?.timelineSection?.subtitle}</p>
+          <h2 className="mt-3 text-display-lg">{project?.timelineSection?.title}</h2>
+        </Reveal>
+        <ol className="mt-14 space-y-px overflow-hidden rounded-2xl border border-border">
+          {project?.timeline?.map((t, i) => (
+            <Reveal key={t.phase} delay={i * 0.05}>
+              <li className="flex flex-col gap-2 bg-card p-7 sm:flex-row sm:items-baseline sm:gap-10">
+                <p className="w-32 shrink-0 text-sm font-medium text-accent">
+                  0{i + 1} · {t.phase}
+                </p>
+                <p className="text-base text-muted-foreground">{t.description}</p>
+              </li>
+            </Reveal>
+          ))}
+        </ol>
+      </section>
 
       {/* NEXT PROJECT */}
       {/*<section className="mx-auto max-w-5xl px-6 pb-32">*/}

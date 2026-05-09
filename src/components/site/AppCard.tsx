@@ -124,7 +124,7 @@ linear-gradient(
           <div className="absolute inset-0 -z-10 grad-aurora rounded-[2rem] blur-2xl opacity-60" />
           <motion.img
             crossOrigin="anonymous"
-            src={urlFor(project.screenshots?.[0]).url()}
+            src={urlFor(project.hero).url()}
             alt={`${project.appName} app screenshot`}
             width={420}
             height={860}

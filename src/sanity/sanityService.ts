@@ -138,3 +138,11 @@ const builder = createImageUrlBuilder(client);
 export function urlFor(source: any) {
   return builder.image(source);
 }
+
+export function fileUrl(ref?: string) {
+  if (!ref) return "";
+
+  const [, id, extension] = ref.split("-");
+
+  return `https://cdn.sanity.io/files/te8jbj37/production/${id}.${extension}`;
+}
