@@ -9,5 +9,6 @@ export type UserResponse = {
   _id: string;
   _type: "user";
   name: string;
+  location: string;
   socialLinks: SocialLinks;
 };

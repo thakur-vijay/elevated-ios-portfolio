@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Mail, Github, Linkedin, Twitter, Send, Check } from "lucide-react";
 import { Reveal } from "@/components/site/Reveal";
+import { useUser } from "../context/UserContext";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -15,17 +16,77 @@ export const Route = createFileRoute("/contact")({
   component: ContactPage,
 });
 
+export const sendContactMail = async (
+  name: string,
+  email: string,
+  company: string,
+  message: string,
+) => {
+  try {
+    const response = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        access_key: "cd4761b5-38c2-4ad0-acaf-d2414a2682d1",
+        name,
+        email,
+        company,
+        message,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.message || "Failed to send message");
+    }
+
+    return {
+      success: true,
+      message: "Message sent successfully",
+    };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      success: false,
+      message: "Something went wrong",
+    };
+  }
+};
+
 function ContactPage() {
   const [sent, setSent] = useState(false);
-  const onSubmit = (e: React.FormEvent) => {
+  const user = useUser();
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSent(true);
+
+    const formData = new FormData(e.currentTarget);
+
+    const name = formData.get("name") as string;
+    const email = formData.get("email") as string;
+    const message = formData.get("message") as string;
+    const company = formData.get("company") as string;
+
+    const result = await sendContactMail(name, email, company, message);
+
+    console.log(result);
+
+    if (result.success) {
+      setSent(true);
+      e.currentTarget.reset();
+    }
   };
 
   return (
     <>
       <section className="mx-auto max-w-4xl px-6 pb-16 pt-32 sm:pt-40">
-        <Reveal><p className="text-eyebrow text-accent">Contact</p></Reveal>
+        <Reveal>
+          <p className="text-eyebrow text-accent">Contact</p>
+        </Reveal>
         <Reveal delay={0.05}>
           <h1 className="mt-4 text-display-2xl">Let's make something exceptional.</h1>
         </Reveal>
@@ -41,46 +102,82 @@ function ContactPage() {
           <div className="space-y-8">
             <div>
               <p className="text-eyebrow text-muted-foreground">Email</p>
-              <a href="mailto:hello@adrianvale.dev" className="mt-2 flex items-center gap-2 text-lg text-foreground">
-                <Mail className="h-4 w-4" /> hello@adrianvale.dev
+              <a
+                href={`mailto:${user?.socialLinks?.mail}`}
+                className="mt-2 flex items-center gap-2 text-lg text-foreground"
+              >
+                <Mail className="h-4 w-4" /> {user?.socialLinks?.mail}
               </a>
             </div>
             <div>
               <p className="text-eyebrow text-muted-foreground">Based in</p>
-              <p className="mt-2 text-lg">San Francisco, CA</p>
+              <p className="mt-2 text-lg">{user?.location}</p>
             </div>
             <div>
               <p className="text-eyebrow text-muted-foreground">Elsewhere</p>
-              <div className="mt-3 flex gap-2">
-                {[
-                  { Icon: Github, label: "GitHub" },
-                  { Icon: Linkedin, label: "LinkedIn" },
-                  { Icon: Twitter, label: "Twitter" },
-                ].map(({ Icon, label }) => (
-                  <a
-                    key={label}
-                    href="#"
-                    aria-label={label}
-                    className="grid h-11 w-11 place-items-center rounded-full border border-border bg-card transition-all duration-300 hover:-translate-y-0.5 hover:border-border-strong hover:shadow-glass"
-                  >
-                    <Icon className="h-4 w-4" />
-                  </a>
-                ))}
-              </div>
+              <ul className="mt-4 flex gap-2">
+                {user?.socialLinks?.github && (
+                  <li>
+                    <a
+                      href={user.socialLinks.github}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label="GitHub"
+                      className="grid h-12 w-12 place-items-center rounded-full border border-border bg-card text-foreground/70 transition-all duration-300 hover:-translate-y-0.5 hover:border-border-strong hover:text-foreground hover:shadow-glass"
+                    >
+                      <Github className="h-5 w-5" />
+                    </a>
+                  </li>
+                )}
+
+                {user?.socialLinks?.linkedin && (
+                  <li>
+                    <a
+                      href={user.socialLinks.linkedin}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label="LinkedIn"
+                      className="grid h-12 w-12 place-items-center rounded-full border border-border bg-card text-foreground/70 transition-all duration-300 hover:-translate-y-0.5 hover:border-border-strong hover:text-foreground hover:shadow-glass"
+                    >
+                      <Linkedin className="h-5 w-5" />
+                    </a>
+                  </li>
+                )}
+
+                {user?.socialLinks?.twitter && (
+                  <li>
+                    <a
+                      href={user.socialLinks.twitter}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label="Twitter"
+                      className="grid h-12 w-12 place-items-center rounded-full border border-border bg-card text-foreground/70 transition-all duration-300 hover:-translate-y-0.5 hover:border-border-strong hover:text-foreground hover:shadow-glass"
+                    >
+                      <Twitter className="h-5 w-5" />
+                    </a>
+                  </li>
+                )}
+              </ul>
             </div>
           </div>
         </Reveal>
 
         <Reveal delay={0.1}>
-          <form onSubmit={onSubmit} className="rounded-3xl border border-border bg-card p-8 shadow-glass sm:p-10">
+          <form
+            onSubmit={onSubmit}
+            className="rounded-3xl border border-border bg-card p-8 shadow-glass sm:p-10"
+          >
             <div className="grid gap-5">
               <Field label="Your name" id="name" required />
               <Field label="Email" id="email" type="email" required />
               <Field label="Company (optional)" id="company" />
               <div>
-                <label htmlFor="message" className="text-sm font-medium text-foreground/90">Message</label>
+                <label htmlFor="message" className="text-sm font-medium text-foreground/90">
+                  Message
+                </label>
                 <textarea
                   id="message"
+                  name="message"
                   required
                   rows={5}
                   className="mt-2 w-full resize-none rounded-2xl border border-border bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20"
@@ -92,7 +189,15 @@ function ContactPage() {
                 disabled={sent}
                 className="group mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition-all duration-300 hover:gap-3 disabled:opacity-80"
               >
-                {sent ? (<><Check className="h-4 w-4" /> Message sent</>) : (<>Send message <Send className="h-4 w-4" /></>)}
+                {sent ? (
+                  <>
+                    <Check className="h-4 w-4" /> Message sent
+                  </>
+                ) : (
+                  <>
+                    Send message <Send className="h-4 w-4" />
+                  </>
+                )}
               </button>
             </div>
           </form>
@@ -102,12 +207,23 @@ function ContactPage() {
   );
 }
 
-function Field({ label, id, type = "text", required }: { label: string; id: string; type?: string; required?: boolean }) {
+function Field({
+  label,
+  id,
+  type = "text",
+  required,
+}: {
+  label: string;
+  id: string;
+  type?: string;
+  required?: boolean;
+}) {
   return (
     <div>
       <label htmlFor={id} className="text-sm font-medium text-foreground/90">{label}</label>
       <input
         id={id}
+        name={id}
         type={type}
         required={required}
         className="mt-2 w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20"

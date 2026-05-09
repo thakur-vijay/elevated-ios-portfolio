@@ -30,6 +30,7 @@ const userSlice = createSlice({
       .addCase(fetchUserResponse.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.user = action.payload;
+        console.log("User is ", action.payload);
       })
       .addCase(fetchUserResponse.rejected, (state, action) => {
         state.status = "failed";
