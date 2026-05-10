@@ -28,7 +28,7 @@ export function Footer() {
               {user?.name}
             </div>
             <p className="mt-4 max-w-sm text-sm text-muted-foreground">
-              Senior iOS Engineer crafting premium native experiences for the Apple ecosystem.
+              {user?.tagline}
             </p>
           </div>
 

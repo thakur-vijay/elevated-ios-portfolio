@@ -16,6 +16,7 @@ import {
   getSkillsQuery,
 } from "@/sanity/queries.ts";
 import { ProjectResponse } from "@/models/project.ts";
+import { UserResponse } from "@/models/user.ts";
 export const fetchHomeData = async () => {
   try {
     console.log("Fetching home data...");
@@ -35,13 +36,13 @@ export const fetchFooterData = async () => {
     return [];
   }
 };
-export const fetchUserData = async () => {
+export const fetchUserData = async (): Promise<UserResponse | null> => {
   try {
     console.log("Fetching home data...");
-    return await client.fetch(getUserQuery);
+    return await client.fetch<UserResponse | null>(getUserQuery);
   } catch (err) {
     console.error("Error fetching home:", err);
-    return [];
+    return null;
   }
 };
 export const fetchAboutData = async () => {

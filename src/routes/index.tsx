@@ -16,20 +16,26 @@ import { useSelector } from "react-redux";
 import { AppDispatch } from "../redux/store";
 import { formatExperienceDuration } from "@/routes/experience.tsx";
 import { fetchSkillResponse } from "@/redux/features/skillsSlice.ts";
+import { useUser } from "@/context/UserContext.tsx";
+import { fetchUserData } from "@/sanity/sanityService.ts";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
+  loader: async () => {
+    const user = await fetchUserData(); // API / CMS / whatever
+    console.log("user", user);
+    return { user };
+  },
+  head: ({ loaderData }) => ({
     meta: [
-      { title: "{Adrian Vale} — Senior iOS Engineer" },
+      { title: `${loaderData?.user?.name} — ${loaderData?.user?.role}` },
       {
         name: "description",
-        content:
-          "Premium native iOS engineering. Swift, SwiftUI, and uncompromising product craft for the Apple ecosystem.",
+        content: loaderData?.user?.tagline,
       },
-      { property: "og:title", content: "Adrian Vale — Senior iOS Engineer" },
+      { property: "og:title", content: `${loaderData?.user?.name} - ${loaderData?.user?.role}` },
       {
         property: "og:description",
-        content: "Premium native iOS engineering for the Apple ecosystem.",
+        content: loaderData?.user?.tagline,
       },
     ],
   }),
@@ -44,7 +50,7 @@ function HomePage() {
   const phoneRotate = useTransform(scrollYProgress, [0, 1], [0, -8]);
   const headlineY = useTransform(scrollYProgress, [0, 1], [0, -80]);
   const headlineOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
-
+  const user = Route.useLoaderData().user;
   const dispatch = useDispatch<AppDispatch>();
   const { home, status: status1 } = useSelector((state: RootState) => state.home);
   const { experience: homeExperience, status: status2 } = useSelector(
@@ -88,7 +94,7 @@ function HomePage() {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="text-eyebrow text-accent"
           >
-            {home?.homeSection?.professionTitle} · {home?.homeSection?.professionLocation}
+            {user?.role} · {user?.location}
           </motion.p>
 
           <motion.h1

@@ -9,14 +9,26 @@ import { useSelector } from "react-redux";
 import { AppDispatch } from "../redux/store";
 import { PortableText } from "@portabletext/react";
 import { useEffect } from "react";
+import { fetchUserData } from "@/sanity/sanityService.ts";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({
+  loader: async () => {
+    const user = await fetchUserData(); // API / CMS / whatever
+    console.log("user", user);
+    return { user };
+  },
+  head: ({ loaderData }) => ({
     meta: [
-      { title: "About — Adrian Vale" },
-      { name: "description", content: "Senior iOS engineer with a decade of native experience. Apple HIG-obsessed, performance-driven, product-minded." },
-      { property: "og:title", content: "About — Adrian Vale" },
-      { property: "og:description", content: "Senior iOS engineer with a decade of native experience." },
+      { title: `About — ${loaderData?.user?.name}` },
+      {
+        name: "description",
+        content: loaderData?.user?.tagline,
+      },
+      { property: "og:title", content: `About — ${loaderData?.user?.name}` },
+      {
+        property: "og:description",
+        content: loaderData?.user?.tagline,
+      },
     ],
   }),
   component: AboutPage,

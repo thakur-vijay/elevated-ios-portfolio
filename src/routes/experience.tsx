@@ -7,17 +7,26 @@ import { fetchExperienceResponse } from "../redux/features/experienceSlice.ts";
 import { useSelector } from "react-redux";
 import { AppDispatch } from "../redux/store";
 import { useEffect } from "react";
+import { fetchUserData } from "@/sanity/sanityService.ts";
 
 export const Route = createFileRoute("/experience")({
-  head: () => ({
+  loader: async () => {
+    const user = await fetchUserData(); // API / CMS / whatever
+    console.log("user", user);
+    return { user };
+  },
+  head: ({ loaderData }) => ({
     meta: [
-      { title: "Experience — Adrian Vale" },
+      { title: `Experience — ${loaderData?.user?.name}` },
       {
         name: "description",
-        content: "A decade of native iOS roles, projects, and platform expertise.",
+        content: loaderData?.user?.tagline,
       },
-      { property: "og:title", content: "Experience — Adrian Vale" },
-      { property: "og:description", content: "A decade of native iOS engineering roles." },
+      { property: "og:title", content: `Experience — ${loaderData?.user?.name}` },
+      {
+        property: "og:description",
+        content: loaderData?.user?.tagline,
+      },
     ],
   }),
   component: ExperiencePage,

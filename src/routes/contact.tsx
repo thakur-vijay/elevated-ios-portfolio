@@ -9,15 +9,26 @@ import { fetchContactPageResponse } from "../redux/features/contactPageSlice";
 import { useSelector } from "react-redux";
 import { AppDispatch } from "../redux/store";
 import { useEffect } from "react";
-import { fetchAboutResponse } from "@/redux/features/aboutSlice.ts";
+import { fetchUserData } from "@/sanity/sanityService.ts";
 
 export const Route = createFileRoute("/contact")({
-  head: () => ({
+  loader: async () => {
+    const user = await fetchUserData(); // API / CMS / whatever
+    console.log("user", user);
+    return { user };
+  },
+  head: ({ loaderData }) => ({
     meta: [
-      { title: "Contact — Adrian Vale" },
-      { name: "description", content: "Get in touch about iOS engineering engagements, advisory, or collaborations." },
-      { property: "og:title", content: "Contact — Adrian Vale" },
-      { property: "og:description", content: "Get in touch about iOS engagements." },
+      { title: `Contact — ${loaderData?.user?.name}` },
+      {
+        name: "description",
+        content: loaderData?.user?.tagline,
+      },
+      { property: "og:title", content: `Contact — ${loaderData?.user?.name}` },
+      {
+        property: "og:description",
+        content: loaderData?.user?.tagline,
+      },
     ],
   }),
   component: ContactPage,
@@ -67,7 +78,7 @@ export const sendContactMail = async (
 
 function ContactPage() {
   const [sent, setSent] = useState(false);
-  const user = useUser();
+  const user = Route.useLoaderData().user;
   const dispatch = useDispatch<AppDispatch>();
   const { contactPage, status } = useSelector((state: RootState) => state.contactPage);
 

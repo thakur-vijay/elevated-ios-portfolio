@@ -10,18 +10,26 @@ import { AppDispatch } from "../redux/store";
 import { useEffect } from "react";
 import { fetchProjectPageResponse } from "@/redux/features/projectPageSlice.ts";
 import { ProjectResponse } from "@/models/project.ts";
+import { fetchUserData } from "@/sanity/sanityService.ts";
 
 export const Route = createFileRoute("/projects/")({
-  head: () => ({
+  loader: async () => {
+    const user = await fetchUserData(); // API / CMS / whatever
+    console.log("user", user);
+    return { user };
+  },
+  head: ({ loaderData }) => ({
     meta: [
-      { title: "Projects — Adrian Vale" },
+      { title: `Projects — ${loaderData?.user?.name}` },
       {
         name: "description",
-        content:
-          "A selection of native iOS apps I've architected, engineered, and shipped to the App Store.",
+        content: loaderData?.user?.tagline,
       },
-      { property: "og:title", content: "Projects — Adrian Vale" },
-      { property: "og:description", content: "Native iOS apps shipped with intention." },
+      { property: "og:title", content: `Projects — ${loaderData?.user?.name}` },
+      {
+        property: "og:description",
+        content: loaderData?.user?.tagline,
+      },
     ],
   }),
   component: ProjectsPage,

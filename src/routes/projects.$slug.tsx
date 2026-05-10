@@ -6,21 +6,23 @@ import { Reveal } from "@/components/site/Reveal";
 import { cn } from "@/lib/utils";
 import { ProjectResponse } from "@/models/project.ts";
 import { fetchProjectDetailResponse } from "@/redux/features/projectDetailSlice.ts";
-import { fetchProjectDetailData, fileUrl, urlFor } from "@/sanity/sanityService.ts";
+import { fetchProjectDetailData, fetchUserData, fileUrl, urlFor } from "@/sanity/sanityService.ts";
 import { getPalette } from "colorthief";
 
 export const Route = createFileRoute("/projects/$slug")({
   loader: async ({ params }) => {
     const project = await fetchProjectDetailData(params.slug);
+    const user = await fetchUserData();
     if (!project) throw notFound();
-    return { project };
+    return { project, user };
   },
   head: ({ loaderData }) => {
     const p = loaderData?.project;
+    const u = loaderData?.user;
     if (!p) return { meta: [{ title: "Project not found" }] };
     return {
       meta: [
-        { title: `${p?.appName} — Adrian Vale` },
+        { title: `${p?.appName} — ${u?.name}` },
         { name: "description", content: p.tagline },
         { property: "og:title", content: `${p.appName} — ${p.tagline}` },
         { property: "og:description", content: p.description },
