@@ -13,6 +13,7 @@ import {
   getContactPageQuery,
   getProjectPageQuery,
   getProjectDetailQuery,
+  getSkillsQuery,
 } from "@/sanity/queries.ts";
 import { ProjectResponse } from "@/models/project.ts";
 export const fetchHomeData = async () => {
@@ -132,6 +133,17 @@ export const fetchProjectDetailData = async (id: string): Promise<ProjectRespons
     return null;
   }
 };
+
+export const fetchSkillsData = async () => {
+  try {
+    console.log("Fetching home data...");
+    return await client.fetch(getSkillsQuery);
+  } catch (err) {
+    console.error("Error fetching home:", err);
+    return [];
+  }
+};
+
 
 const builder = createImageUrlBuilder(client);
 

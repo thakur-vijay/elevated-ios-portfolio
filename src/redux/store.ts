@@ -11,6 +11,7 @@ import homeProjectReducer from "./features/homeProjectSlice";
 import contactPageReducer from "./features/contactPageSlice";
 import projectPageReducer from "./features/projectPageSlice";
 import projectDetailReducer from "./features/projectDetailSlice";
+import skillsReducer from "./features/skillsSlice";
 export const store = configureStore({
   reducer: {
     home: homeReducer,
@@ -25,6 +26,7 @@ export const store = configureStore({
     contactPage: contactPageReducer,
     projectPage: projectPageReducer,
     projectDetail: projectDetailReducer,
+    skills: skillsReducer,
   },
 });
 

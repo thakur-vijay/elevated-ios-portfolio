@@ -88,3 +88,5 @@ export const getProjectPageQuery = `*[_type == "projectPage"][0]`;
 export const getProjectDetailQuery = `
   *[_type == "project" && _id == $id][0]
 `;
+
+export const getSkillsQuery = `*[_type == "skills"] | order(_createdAt asc)`;

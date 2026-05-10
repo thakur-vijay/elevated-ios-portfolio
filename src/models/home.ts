@@ -28,12 +28,6 @@ export type SkillsSection = {
   title?: string;
   subTitle?: string;
   description?: string;
-  skills?: Skill[];
-};
-
-export type Skill = {
-  name?: string;
-  svgCode?: string;
 };
 
 export type ImpactSection = {

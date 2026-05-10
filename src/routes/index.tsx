@@ -15,6 +15,7 @@ import { fetchHomeProjectResponse} from "@/redux/features/homeProjectSlice.ts";
 import { useSelector } from "react-redux";
 import { AppDispatch } from "../redux/store";
 import { formatExperienceDuration } from "@/routes/experience.tsx";
+import { fetchSkillResponse } from "@/redux/features/skillsSlice.ts";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -51,6 +52,7 @@ function HomePage() {
   );
 
   const { homeProject, status: status3 } = useSelector((state: RootState) => state.homeProject);
+  const { skill: skills, status: status4 } = useSelector((state: RootState) => state.skills);
 
   useEffect(() => {
     if (status1 === "idle") {
@@ -62,7 +64,10 @@ function HomePage() {
     if (status3 === "idle") {
       dispatch(fetchHomeProjectResponse());
     }
-  }, [status1, status2, status3, dispatch]);
+    if (status4 === "idle") {
+      dispatch(fetchSkillResponse());
+    }
+  }, [status1, status2, status3, status4, dispatch]);
   return (
     <>
       {/* HERO */}
@@ -195,16 +200,24 @@ function HomePage() {
           description={home?.skillsSection?.description}
           align="center"
         />
-        <div className="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-          {home?.skillsSection?.skills?.map(({ name, svgCode }, i) => (
-            <Reveal key={name} delay={i * 0.03}>
-              <div className="group flex flex-col items-center gap-3 rounded-2xl border border-border bg-card p-6 transition-all duration-500 hover:-translate-y-1 hover:border-border-strong hover:shadow-glass">
-                <div
-                  className="text-accent transition-transform duration-500 group-hover:scale-110"
-                  dangerouslySetInnerHTML={{ __html: svgCode ?? "" }}
-                />
+        <div className="mt-12 space-y-8">
+          {skills?.map((group, i) => (
+            <Reveal key={group.label} delay={i * 0.035}>
+              <div>
+                <h3 className="mb-4 text-sm font-semibold tracking-tight text-foreground">
+                  {group.label}
+                </h3>
 
-                <span>{name}</span>
+                <div className="flex flex-wrap gap-2">
+                  {group.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className="inline-flex items-center rounded-full border border-border-strong bg-background/60 px-4 py-2 text-sm font-medium text-foreground/80 backdrop-blur transition-all duration-300 hover:bg-background"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
               </div>
             </Reveal>
           ))}
