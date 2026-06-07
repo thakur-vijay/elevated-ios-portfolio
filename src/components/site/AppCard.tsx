@@ -155,7 +155,7 @@ export function AppCard({
             height={860}
             onLoad={handleIconLoad}
             loading="lazy"
-            className="max-h-[520px] w-auto rounded-[2rem] border border-border/40 shadow-card"
+            className="max-h-[520px] w-auto"
             whileHover={{ y: -6, scale: 1.01 }}
             transition={{ type: "spring", stiffness: 200, damping: 20 }}
           />
