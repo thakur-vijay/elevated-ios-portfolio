@@ -285,7 +285,7 @@ function ProjectDetailPage() {
 
         <div
           ref={sliderRef}
-          className="scrollbar-none mt-10 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-4 sm:px-[max(1.5rem,calc((100vw-64rem)/2))]"
+          className="scrollbar-none mt-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-4 sm:px-[max(1.5rem,calc((100vw-64rem)/2))]"
         >
           {/* APP CLIP FIRST */}
           {project?.appClip?.asset?._ref && (
@@ -306,7 +306,7 @@ function ProjectDetailPage() {
             <motion.button
               key={i}
               onClick={() => setLightbox(i)}
-              className="relative shrink-0 snap-center overflow-hidden rounded-[2rem] border border-border bg-card shadow-card"
+              className="relative shrink-0 snap-center overflow-hidden"
             >
               <img
                 src={urlFor(src).url()}
