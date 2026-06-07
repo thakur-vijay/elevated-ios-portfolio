@@ -52,7 +52,7 @@ export const getHomeExperienceQuery = `
 // Fetch lightweight data only
 
 export const getHomeProjectsQuery = `
-  *[_type == "project"] | order(_createdAt desc)[0...3] {
+  *[_type == "project"] | order(_createdAt desc)[0...2] {
     _id,
     appName,
     tagline,
