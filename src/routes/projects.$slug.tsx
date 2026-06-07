@@ -194,16 +194,18 @@ function ProjectDetailPage() {
               <Reveal delay={0.15}>
                 <p className="mt-3 max-w-2xl text-xl text-muted-foreground">{project?.tagline}</p>
               </Reveal>
-              <Reveal delay={0.2}>
-                <div className="mt-6 flex flex-wrap items-center gap-3">
-                  <a
-                    href={project.appStoreUrl}
-                    className="group inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-all duration-300 hover:gap-2.5"
-                  >
-                    <Download className="h-4 w-4" /> App Store
-                  </a>
-                </div>
-              </Reveal>
+              {project.appStoreUrl && (
+                <Reveal delay={0.2}>
+                  <div className="mt-6 flex flex-wrap items-center gap-3">
+                    <a
+                      href={project.appStoreUrl}
+                      className="group inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-all duration-300 hover:gap-2.5"
+                    >
+                      <Download className="h-4 w-4" /> App Store
+                    </a>
+                  </div>
+                </Reveal>
+              )}
             </div>
           </div>
 
