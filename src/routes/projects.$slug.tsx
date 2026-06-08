@@ -95,10 +95,12 @@ function ProjectDetailPage() {
 
     return dark
       ? `linear-gradient(
-        to bottom,
-        rgb(${darken(c1._r, 0.32)}, ${darken(c1._g, 0.32)}, ${darken(c1._b, 0.32)}) 0%,
-        rgb(${darken(c2._r, 0.18)}, ${darken(c2._g, 0.18)}, ${darken(c2._b, 0.18)}) 100%
-      )`
+      to bottom,
+      rgb(${darken(c1._r, 0.32)}, ${darken(c1._g, 0.32)}, ${darken(c1._b, 0.32)}) 0%,
+      rgb(${darken(c2._r, 0.18)}, ${darken(c2._g, 0.18)}, ${darken(c2._b, 0.18)}) 60%,
+      rgba(0,0,0,1) 100%
+
+    )`
       : `linear-gradient(
         to bottom,
         rgb(${soften(c1._r, 0.6)}, ${soften(c1._g, 0.6)}, ${soften(c1._b, 0.6)}) 0%,
@@ -291,7 +293,7 @@ function ProjectDetailPage() {
         >
           {/* APP CLIP FIRST */}
           {project?.appClip?.asset?._ref && (
-            <motion.div className="relative shrink-0 snap-center overflow-hidden rounded-[2rem] border border-border bg-card shadow-card">
+            <motion.div className="relative shrink-0 snap-center overflow-hidden">
               <video
                 src={fileUrl(project.appClip.asset._ref)}
                 poster={urlFor(project.hero).url()}
