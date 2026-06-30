@@ -3,7 +3,8 @@ const GA_ID = "G-Q7FJJKPYSL";
 declare global {
   interface Window {
     dataLayer: any[];
-    gtag: (...args: any[]) => void;
+      gtag: (...args: any[]) => void;
+      clarity?: (...args: any[]) => void;
   }
 }
 

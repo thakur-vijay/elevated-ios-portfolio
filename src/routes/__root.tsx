@@ -126,7 +126,24 @@ function RootContent() {
       page_path: location.pathname,
 
     });
+    window.clarity?.("set", "page", location.pathname);
   }, [location.pathname]);
+  useEffect(() => {
+    const w = window as any;
+
+    if (!w.clarity) {
+      w.clarity = function (...args: any[]) {
+        (w.clarity.q = w.clarity.q || []).push(args);
+      };
+    }
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://www.clarity.ms/tag/xf2a29cubf";
+
+    document.head.appendChild(script);
+  }, []);
+
   return (
     <UserContext.Provider value={user}>
       <Navbar />
