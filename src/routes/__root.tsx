@@ -71,6 +71,22 @@ function RootShell({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q7FJJKPYSL"></script>
+
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
+
+      gtag('js', new Date());
+      gtag('config', 'G-Q7FJJKPYSL', {
+        page_path: window.location.pathname,
+      });
+    `,
+          }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark');}catch(e){}})();`,
@@ -105,6 +121,11 @@ function RootContent() {
   }, [status, dispatch]);
   useEffect(() => {
     window.scrollTo(0, 0);
+    window.gtag?.("event", "page_view", {
+
+      page_path: location.pathname,
+
+    });
   }, [location.pathname]);
   return (
     <UserContext.Provider value={user}>
