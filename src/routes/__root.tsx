@@ -71,7 +71,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q7FJJKPYSL"></script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZXS4W4SPCW"></script>
 
         <script
           dangerouslySetInnerHTML={{
@@ -81,7 +81,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
       window.gtag = gtag;
 
       gtag('js', new Date());
-      gtag('config', 'G-Q7FJJKPYSL', {
+      gtag('config', 'G-ZXS4W4SPCW', {
         page_path: window.location.pathname,
       });
     `,
